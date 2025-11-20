@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sodda Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .metric {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff;
+            margin: 10px 0;
+        }
+        .description {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mening Birinchi Vercel Dashboardim</h1>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="card">
+            <h2>Umumiy Sotuv</h2>
+            <div class="metric">45,210,000 UZS</div>
+            <p class="description">Joriy oydagi jami tushum.</p>
+        </div>
+
+        <div class="card">
+            <h2>Yangi Mijozlar</h2>
+            <div class="metric">+ 145</div>
+            <p class="description">O'tgan haftaga nisbatan o'sish.</p>
+        </div>
+
+        <div class="card">
+            <h2>Sayt Tashriflari</h2>
+            <div class="metric">98,765</div>
+            <p class="description">Oxirgi 30 kundagi umumiy foydalanuvchilar soni.</p>
+        </div>
+        
+        <div class="card">
+            <h2>Loyihalar Statusi</h2>
+            <div class="metric">7/10</div>
+            <p class="description">Tugallangan loyihalar soni.</p>
+        </div>
+    </div>
+
+</body>
+</html>
