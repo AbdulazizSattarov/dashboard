@@ -13,158 +13,183 @@
   color-scheme:dark;
   --bg:#060807; --ink:#F2F5F3; --mut:rgba(242,245,243,.58); --dim:rgba(242,245,243,.36);
   --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
-  --green:#22D68F; --amber:#FF8A2B; --blue:#4A82FF; --rose:#FF6A5C; --gold:#F4B445;
+  --green:#22D68F; --amber:#FF8A2B; --blue:#4A82FF; --rose:#FF6A5C; --gold:#F4B445; --violet:#9B7BFF; --cyan:#2CC9E0;
+  --acc:var(--green);
   --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
   --sans:"Geist",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:"Geist Mono",ui-monospace,Menlo,Consolas,monospace;
 }
+body[data-t=umumiy]{--acc:#22D68F} body[data-t=zaxira]{--acc:#4A82FF} body[data-t=xodim]{--acc:#FF8A2B}
+body[data-t=kassa]{--acc:#2CC9E0} body[data-t=qarz]{--acc:#9B7BFF} body[data-t=tarix]{--acc:#FF6A5C}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
 body{font-family:var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(108px + env(safe-area-inset-bottom,0px))}
-button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
-button:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:3px}
+button,input{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:3px}
+svg.i{width:19px;height:19px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 
-/* tepadagi rangli nur - har bo'limda o'z rangi */
-.amb{position:fixed;left:0;right:0;top:0;height:640px;pointer-events:none;z-index:0;opacity:0;transition:opacity .9s ease}
+/* ---------- rangli nur ---------- */
+.amb{position:fixed;left:0;right:0;top:0;height:680px;pointer-events:none;z-index:0;opacity:0;transition:opacity .9s ease}
 .amb.on{opacity:1}
 .amb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,var(--bg) 92%)}
-.amb.g{background:radial-gradient(65% 55% at 22% -6%,rgba(46,230,150,.62),transparent 70%),
-  radial-gradient(55% 45% at 88% 2%,rgba(12,120,78,.7),transparent 72%),
-  radial-gradient(90% 40% at 50% 0%,rgba(20,90,60,.5),transparent 80%)}
-.amb.b{background:radial-gradient(65% 55% at 78% -6%,rgba(70,130,255,.65),transparent 70%),
-  radial-gradient(55% 45% at 12% 2%,rgba(20,60,180,.7),transparent 72%),
-  radial-gradient(90% 40% at 50% 0%,rgba(25,45,120,.55),transparent 80%)}
-.amb.a{background:radial-gradient(65% 55% at 20% -6%,rgba(255,140,50,.62),transparent 70%),
-  radial-gradient(55% 45% at 85% 2%,rgba(150,60,10,.7),transparent 72%),
-  radial-gradient(90% 40% at 50% 0%,rgba(110,45,10,.5),transparent 80%)}
+.amb[data-a=umumiy]{background:radial-gradient(60% 55% at 22% -6%,rgba(46,230,150,.6),transparent 70%),radial-gradient(50% 45% at 88% 2%,rgba(12,120,78,.7),transparent 72%)}
+.amb[data-a=zaxira]{background:radial-gradient(60% 55% at 78% -6%,rgba(70,130,255,.62),transparent 70%),radial-gradient(50% 45% at 12% 2%,rgba(20,60,180,.7),transparent 72%)}
+.amb[data-a=xodim]{background:radial-gradient(60% 55% at 22% -6%,rgba(255,140,50,.6),transparent 70%),radial-gradient(50% 45% at 85% 2%,rgba(150,60,10,.7),transparent 72%)}
+.amb[data-a=kassa]{background:radial-gradient(60% 55% at 70% -6%,rgba(44,201,224,.55),transparent 70%),radial-gradient(50% 45% at 15% 2%,rgba(10,90,110,.7),transparent 72%)}
+.amb[data-a=qarz]{background:radial-gradient(60% 55% at 25% -6%,rgba(155,123,255,.58),transparent 70%),radial-gradient(50% 45% at 85% 2%,rgba(70,40,160,.7),transparent 72%)}
+.amb[data-a=tarix]{background:radial-gradient(60% 55% at 75% -6%,rgba(255,106,92,.52),transparent 70%),radial-gradient(50% 45% at 15% 2%,rgba(130,30,30,.65),transparent 72%)}
 
-.wrap{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:12px 18px 0}
-.top{display:flex;align-items:center;justify-content:space-between;height:34px}
+/* ---------- karkas ---------- */
+.app{position:relative;z-index:1}
+.side{display:none}
+.main{max-width:460px;margin:0 auto;padding:12px 18px 0}
+.hdr{position:relative}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px}
 .brand{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;letter-spacing:-.01em}
-.logo{width:24px;height:24px;border-radius:8px;flex-shrink:0;
-  background:linear-gradient(#fff,#fff) center/2.5px 11px no-repeat,linear-gradient(#fff,#fff) center/11px 2.5px no-repeat,
-  linear-gradient(145deg,#4ff5b4,#0b8a5a);
+.logo{width:26px;height:26px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(#fff,#fff) center/2.6px 12px no-repeat,linear-gradient(#fff,#fff) center/12px 2.6px no-repeat,linear-gradient(145deg,#4ff5b4,#0b8a5a);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 4px 14px rgba(34,214,143,.4)}
-.date{font-size:12.5px;color:var(--mut)}
-.steps{display:flex;gap:5px;justify-content:center;margin:16px 0 18px}
-.steps i{width:14px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);transition:width .45s cubic-bezier(.16,1,.3,1),background .45s}
-.steps i.on{width:28px;background:#fff}
-h1{font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.03;letter-spacing:-.012em;margin:0 auto 24px;text-align:center;max-width:330px;text-wrap:balance}
+.tools{display:flex;gap:7px}
+.tb{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;position:relative;color:rgba(255,255,255,.88);
+  background:radial-gradient(circle at 32% 22%,rgba(255,255,255,.13),rgba(255,255,255,.03) 70%);border:1px solid rgba(255,255,255,.11);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 14px rgba(0,0,0,.4);transition:transform .15s,background .2s}
+.tb:active{transform:scale(.93)}
+.tb .dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--rose);border:2px solid #111;display:none}
+.tb.has .dot{display:block}
+.tb.plus{display:none;color:#fff;background:radial-gradient(130% 160% at 50% -30%,color-mix(in srgb,var(--acc) 55%,#fff),var(--acc) 50%,color-mix(in srgb,var(--acc) 60%,#000));
+  border-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 22px color-mix(in srgb,var(--acc) 45%,transparent);transition:background .5s,box-shadow .5s}
+.tb.fs{display:none}
+.eyebrow{display:none;font-size:12.5px;color:var(--mut);letter-spacing:.01em}
+.steps{display:flex;gap:5px;justify-content:center;margin:14px 0 16px}
+.steps i{width:12px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);transition:width .45s cubic-bezier(.16,1,.3,1),background .45s}
+.steps i.on{width:26px;background:#fff}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(32px,9.6vw,40px);line-height:1.03;letter-spacing:-.012em;margin:0 auto 22px;text-align:center;max-width:340px;text-wrap:balance}
 h2{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.1;margin:0;letter-spacing:-.005em}
 .sub{font-size:12.5px;color:var(--mut);margin-top:4px}
 
-.panel{display:none}
-.panel.on{display:block;animation:rise .55s cubic-bezier(.16,1,.3,1) both}
+.panel{display:none;flex-direction:column;gap:14px}
+.panel.on{display:flex;animation:rise .55s cubic-bezier(.16,1,.3,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.g2,.g3{display:flex;flex-direction:column;gap:14px}
 
-/* ===== hamyon kartochkasi ===== */
-.wallet{border-radius:36px;padding:7px 7px 9px;position:relative;
+.card{border-radius:30px;padding:20px 18px;min-width:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.022));border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.chead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.link{font-size:12.5px;color:var(--mut);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.3);white-space:nowrap}
+
+.money{transition:filter .3s}
+body.hide .money{filter:blur(8px);user-select:none}
+
+/* ---------- hamyon ---------- */
+.wallet{border-radius:36px;padding:7px 7px 9px;position:relative;min-width:0;
   background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.035) 40%,rgba(255,255,255,.025));
-  border:1px solid var(--line2);
-  box-shadow:0 40px 70px -24px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.12)}
+  border:1px solid var(--line2);box-shadow:0 40px 70px -24px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.12)}
 .face{position:relative;border-radius:30px;padding:22px 20px 56px;text-align:center;overflow:hidden;
-  background:radial-gradient(110% 85% at 18% -5%,#6bffc4 0%,rgba(80,250,180,0) 55%),
-             linear-gradient(172deg,#1ccf86 0%,#0d9562 50%,#065c3c 100%);
+  background:radial-gradient(110% 85% at 18% -5%,#6bffc4 0%,rgba(80,250,180,0) 55%),linear-gradient(172deg,#1ccf86 0%,#0d9562 50%,#065c3c 100%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -24px 40px rgba(0,0,0,.22)}
-.face::before{content:"";position:absolute;left:-20%;right:-20%;top:-60%;height:95%;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(255,255,255,.22),transparent);pointer-events:none}
-.flabel{position:relative;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:30px;
-  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);font-size:12.5px;font-weight:500;color:#fff;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
-.big{position:relative;font-size:48px;font-weight:600;letter-spacing:-.04em;margin-top:13px;line-height:1;
-  font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 2px 24px rgba(0,40,25,.35)}
+.face::before{content:"";position:absolute;left:-20%;right:-20%;top:-60%;height:95%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.22),transparent);pointer-events:none}
+.flabel{position:relative;display:inline-flex;padding:6px 14px;border-radius:30px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+  font-size:12.5px;font-weight:500;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.big{position:relative;font-size:clamp(38px,11vw,50px);font-weight:600;letter-spacing:-.04em;margin-top:13px;line-height:1;font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 2px 24px rgba(0,40,25,.35)}
 .big small{font-size:17px;font-weight:500;opacity:.78;margin-left:5px;letter-spacing:0}
 .fmeta{position:relative;margin-top:10px;font-size:12.5px;color:rgba(255,255,255,.82)}
 .fmeta b{font-weight:600;color:#fff}
-
 .avs{display:flex;justify-content:center;gap:9px;margin-top:-31px;position:relative;z-index:2}
-.av{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;color:#13221b;
-  border:3px solid #0d1311;box-shadow:0 10px 20px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.6),inset 0 -4px 8px rgba(0,0,0,.12);
-  position:relative;transform:scale(.6);opacity:0;transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.av{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;color:#13221b;border:3px solid #0d1311;position:relative;
+  box-shadow:0 10px 20px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.6),inset 0 -4px 8px rgba(0,0,0,.12);
+  transform:scale(.6);opacity:0;transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .3s}
 .av.in{transform:none;opacity:1}
 .av.off{filter:grayscale(.85) brightness(.7)}
-.av::after{content:"";position:absolute;right:0;bottom:1px;width:12px;height:12px;border-radius:50%;
-  background:var(--green);border:2.5px solid #0d1311}
+.av::after{content:"";position:absolute;right:0;bottom:1px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2.5px solid #0d1311}
 .av.off::after{background:#5b6560}
 .shift{text-align:center;font-size:12px;color:var(--mut);margin:9px 0 2px}
-
-.tx{margin:12px 3px 0;border-radius:26px;padding:13px 15px 15px;
-  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));border:1px solid var(--line);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.tx{margin:12px 3px 0;border-radius:26px;padding:13px 15px 15px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));border:1px solid var(--line)}
 .txh{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);margin-bottom:11px}
-.txh u{color:var(--ink);text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.4);cursor:pointer}
 .txr{display:flex;align-items:center;gap:12px}
-.pillic{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
-  background:radial-gradient(circle at 32% 25%,#ffffff,#d8f6e8 45%,#8fdcba);
-  box-shadow:inset 0 -3px 6px rgba(0,60,35,.25),0 6px 14px rgba(0,0,0,.45);color:#0b6b46}
+.pillic{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;color:#0b6b46;
+  background:radial-gradient(circle at 32% 25%,#fff,#d8f6e8 45%,#8fdcba);box-shadow:inset 0 -3px 6px rgba(0,60,35,.25),0 6px 14px rgba(0,0,0,.45)}
 .txn{font-size:15.5px;font-weight:600;letter-spacing:-.01em}
 .txs{font-size:12.5px;color:var(--mut);margin-top:2px}
 .txa{margin-left:auto;font-size:18px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-
 .acts{display:flex;gap:8px;margin:9px 3px 0;align-items:center}
 .rb{width:54px;height:54px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;color:rgba(255,255,255,.88);
   background:radial-gradient(circle at 32% 22%,#424c56,#1a1f25 68%);border:1px solid rgba(255,255,255,.07);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 -3px 8px rgba(0,0,0,.55),0 8px 16px rgba(0,0,0,.55);
-  transition:transform .15s}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 -3px 8px rgba(0,0,0,.55),0 8px 16px rgba(0,0,0,.55);transition:transform .15s}
 .rb:active,.pb:active{transform:scale(.95)}
-.pb{flex:1;height:54px;border-radius:30px;display:flex;align-items:center;justify-content:center;gap:7px;
-  font-size:15.5px;font-weight:600;letter-spacing:-.01em;transition:transform .15s;white-space:nowrap}
-.pb.glass{background:radial-gradient(130% 160% at 50% -30%,rgba(255,255,255,.26),rgba(255,255,255,.05) 55%,rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 16px rgba(0,0,0,.4)}
-.pb.go{color:#03261a;background:radial-gradient(130% 160% at 50% -35%,#9affd6,#2fdc95 42%,#0d9a64);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -3px 8px rgba(0,70,40,.3),0 12px 26px rgba(34,214,143,.38)}
+.pb{flex:1;height:54px;border-radius:30px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:15px;font-weight:600;letter-spacing:-.01em;transition:transform .15s;white-space:nowrap;min-width:0}
+.pb.glass{background:radial-gradient(130% 160% at 50% -30%,rgba(255,255,255,.26),rgba(255,255,255,.05) 55%,rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 16px rgba(0,0,0,.4)}
+.pb.go{color:#03261a;background:radial-gradient(130% 160% at 50% -35%,#9affd6,#2fdc95 42%,#0d9a64);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -3px 8px rgba(0,70,40,.3),0 12px 26px rgba(34,214,143,.38)}
 
-/* ===== kartochkalar ===== */
-.card{margin-top:14px;border-radius:30px;padding:20px 18px;
-  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.022));border:1px solid var(--line);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:1fr;gap:10px}
+.kpi{border-radius:24px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line)}
+.kpi .l{font-size:13px;font-weight:500}
+.kpi .d{font-size:11.5px;color:var(--mut);margin-top:3px}
+.kpi .v{font-size:21px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi .v small{font-size:12px;font-weight:500;color:var(--mut);margin-left:3px;letter-spacing:0}
+.kpi .tr{font-size:11.5px;font-weight:600;margin-top:3px;text-align:right}
+.up{color:#5ff0b2} .down{color:#ff8f84}
 
-/* gauge */
+/* ---------- gauge ---------- */
 .gauge{position:relative;margin:6px -6px 0}
-.gauge svg{display:block;width:100%;height:auto;overflow:visible}
+.gauge svg{display:block;width:100%;max-width:380px;margin:0 auto;height:auto;overflow:visible}
 .gcenter{position:absolute;left:0;right:0;top:44%;text-align:center;pointer-events:none}
 .gpct{font-family:var(--serif);font-size:54px;line-height:1;letter-spacing:-.02em}
 .gcap{font-size:12px;color:var(--mut);margin-top:4px}
 .readout{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:4px}
 .mini{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:500;color:rgba(255,255,255,.85);
-  background:radial-gradient(circle at 32% 22%,#3a434c,#171b20 70%);border:1px solid rgba(255,255,255,.07);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 5px 12px rgba(0,0,0,.5)}
-.lcd{min-width:132px;height:44px;border-radius:14px;padding:0 16px;display:flex;align-items:baseline;justify-content:center;gap:6px;
-  background:linear-gradient(180deg,#0a0f0d,#111815);border:1px solid rgba(34,214,143,.22);
-  box-shadow:inset 0 2px 8px rgba(0,0,0,.7),0 0 0 4px rgba(255,255,255,.025);padding-top:9px}
+  background:radial-gradient(circle at 32% 22%,#3a434c,#171b20 70%);border:1px solid rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 5px 12px rgba(0,0,0,.5)}
+.lcd{min-width:132px;height:44px;border-radius:14px;padding:9px 16px 0;display:flex;align-items:baseline;justify-content:center;gap:6px;
+  background:linear-gradient(180deg,#0a0f0d,#111815);border:1px solid rgba(34,214,143,.22);box-shadow:inset 0 2px 8px rgba(0,0,0,.7),0 0 0 4px rgba(255,255,255,.025)}
 .lcd span{font-family:var(--mono);font-size:22px;font-weight:600;color:#7dffc8;text-shadow:0 0 12px rgba(46,230,150,.65);letter-spacing:.02em}
 .lcd small{font-family:var(--mono);font-size:11px;color:rgba(125,255,200,.6)}
 .hint{text-align:center;font-size:11px;color:var(--dim);margin-top:10px;letter-spacing:.04em}
 
-/* ro'yxat */
+/* ---------- haftalik ustunlar ---------- */
+.wk{display:flex;align-items:flex-end;gap:8px;height:150px;margin-top:18px}
+.wk .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;height:100%;min-width:0}
+.wk .v{font-size:10.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+.wk .b{width:100%;max-width:38px;border-radius:12px 12px 6px 6px;height:0;transition:height 1s cubic-bezier(.16,1,.3,1);
+  background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.wk .c.now .b{background:radial-gradient(120% 80% at 50% 0%,#9affd6,#22d68f 50%,#0b7a50);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 0 20px rgba(34,214,143,.4)}
+.wk .c.now .v{color:#7dffc8;font-weight:600}
+.wk .dl{font-size:11px;color:var(--dim)}
+.wk .c.now .dl{color:var(--ink);font-weight:600}
+
+/* ---------- ro'yxatlar ---------- */
 .list{margin-top:12px}
 .row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
-.ico{width:42px;height:42px;border-radius:15px;flex-shrink:0;display:grid;place-items:center;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 12px rgba(0,0,0,.35)}
+.ico{width:42px;height:42px;border-radius:15px;flex-shrink:0;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 12px rgba(0,0,0,.35)}
 .ico.r{background:radial-gradient(circle at 30% 20%,#ff9d90,#e2483a 70%);color:#fff}
 .ico.y{background:radial-gradient(circle at 30% 20%,#ffd98a,#d88e17 70%);color:#3a2300}
+.ico.g{background:radial-gradient(circle at 30% 20%,#9affd6,#14a86c 70%);color:#02261a}
+.ico.b{background:radial-gradient(circle at 30% 20%,#b6d4ff,#3f6fe0 70%);color:#fff}
+.ico.v{background:radial-gradient(circle at 30% 20%,#d6c8ff,#7a56f0 70%);color:#fff}
+.ico.n{background:radial-gradient(circle at 30% 20%,#4a535c,#1c2126 70%);color:#fff}
 .gr{flex:1;min-width:0}
 .n{font-size:15px;font-weight:600;letter-spacing:-.01em}
 .s{font-size:12.5px;color:var(--mut);margin-top:2px}
 .tag{font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:30px;white-space:nowrap}
 .tag.r{background:rgba(255,106,92,.14);color:#ff8f84;border:1px solid rgba(255,106,92,.22)}
 .tag.y{background:rgba(244,180,69,.13);color:#f7c46a;border:1px solid rgba(244,180,69,.22)}
+.tag.g{background:rgba(34,214,143,.13);color:#5ff0b2;border:1px solid rgba(34,214,143,.25)}
+.tag.v{background:rgba(155,123,255,.15);color:#bda9ff;border:1px solid rgba(155,123,255,.28)}
 
-/* ===== zaxira: asalari uyasi ===== */
-.comb{display:flex;justify-content:center;margin:4px 0 0}
-.comb svg{width:100%;max-width:330px;height:auto;overflow:visible}
+/* ---------- zaxira ---------- */
+.comb{display:flex;justify-content:center}
+.comb svg{width:100%;max-width:340px;height:auto;overflow:visible}
 .hx{cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .35s cubic-bezier(.34,1.56,.64,1),filter .35s}
 .hx:hover{transform:scale(1.03)}
 .hx.sel{transform:scale(1.08);filter:drop-shadow(0 0 22px rgba(74,130,255,.75)) drop-shadow(0 10px 18px rgba(0,0,0,.5))}
 .hx text{font-family:var(--sans);pointer-events:none}
 .hx:focus{outline:none}
 .hx:focus-visible .edge{stroke:#fff;stroke-width:2}
-.legend{display:flex;justify-content:center;gap:16px;font-size:12px;color:var(--mut);margin:14px 0 2px}
+.legend{display:flex;justify-content:center;gap:16px;font-size:12px;color:var(--mut);margin-top:14px}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
-
-.det{margin-top:14px}
-.dhead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .qty{display:flex;align-items:baseline;gap:6px;margin-top:16px}
 .qty b{font-size:44px;font-weight:600;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
 .qty span{font-size:14px;color:var(--mut)}
@@ -175,39 +200,43 @@ h2{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.1;margi
 .fact .l{font-size:11.5px;color:var(--mut)}
 .fact .v{font-size:15px;font-weight:600;margin-top:3px}
 .wbtn{display:flex;align-items:center;justify-content:center;width:100%;height:54px;margin-top:16px;border-radius:30px;
-  background:linear-gradient(180deg,#ffffff,#e6e9e8);color:#0b0f0d;font-size:15.5px;font-weight:600;
+  background:linear-gradient(180deg,#fff,#e6e9e8);color:#0b0f0d;font-size:15px;font-weight:600;
   box-shadow:inset 0 -2px 0 rgba(0,0,0,.08),0 12px 26px rgba(0,0,0,.45);transition:transform .15s,background .3s}
 .wbtn:active{transform:scale(.97)}
 .wbtn.done{background:linear-gradient(180deg,#2fdc95,#16a86c);color:#02261a}
+.search{display:flex;align-items:center;gap:10px;height:46px;border-radius:16px;padding:0 14px;margin-top:14px;
+  background:rgba(0,0,0,.25);border:1px solid var(--line);color:var(--mut)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:none;font-size:14.5px;color:var(--ink)}
+.search input::placeholder{color:var(--dim)}
+.srow{cursor:pointer;border-radius:14px;transition:background .2s}
+.srow:hover{background:rgba(255,255,255,.03)}
+.srow.sel .n{color:#8fb6ff}
+.sbar{height:5px;border-radius:5px;background:rgba(255,255,255,.07);margin-top:7px;overflow:hidden}
+.sbar b{display:block;height:100%;border-radius:5px}
+.empty{padding:22px 0 8px;text-align:center;font-size:13px;color:var(--mut);border-top:1px solid var(--line)}
 
-/* ===== xodimlar: orbita ===== */
-.orbit{position:relative;width:310px;height:310px;margin:0 auto}
+/* ---------- xodimlar ---------- */
+.orbitcard{display:flex;align-items:center;justify-content:center;padding:26px 10px}
+.orbit{position:relative;width:310px;height:310px;flex-shrink:0}
 .orbit .ring{position:absolute;inset:34px;border-radius:50%;border:1px dashed rgba(255,255,255,.1)}
-.ocore{position:absolute;left:50%;top:50%;width:136px;height:136px;margin:-68px 0 0 -68px;border-radius:50%;
+.ocore{position:absolute;left:50%;top:50%;width:140px;height:140px;margin:-70px 0 0 -70px;border-radius:50%;
   display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.12),rgba(255,255,255,.03) 60%);
-  border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 20px 40px rgba(0,0,0,.5)}
-.ocore .on{font-size:13px;font-weight:600;color:#ffb36b;margin-bottom:6px;letter-spacing:-.01em}
+  background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.12),rgba(255,255,255,.03) 60%);border:1px solid rgba(255,255,255,.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 20px 40px rgba(0,0,0,.5)}
+.ocore .on{font-size:13px;font-weight:600;color:#ffb36b;margin-bottom:6px}
 .ocore .v{font-family:var(--serif);font-size:44px;line-height:.95;letter-spacing:-.02em}
 .ocore .u{font-size:11.5px;color:var(--mut);margin-top:5px}
-.ob{position:absolute;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;display:grid;place-items:center;
-  font-weight:700;font-size:15px;color:rgba(255,255,255,.9);
+.ob{position:absolute;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;color:rgba(255,255,255,.9);
   background:radial-gradient(circle at 32% 22%,#454f59,#1a1f25 68%);border:1px solid rgba(255,255,255,.08);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 -3px 8px rgba(0,0,0,.55),0 10px 18px rgba(0,0,0,.55);
   transition:transform .4s cubic-bezier(.34,1.56,.64,1),background .3s,color .3s,box-shadow .3s}
-.ob.sel{transform:scale(1.14);color:#fff;
-  background:radial-gradient(circle at 32% 22%,#ffc48a,#ff8a2b 45%,#c2500c);
+.ob.sel{transform:scale(1.14);color:#fff;background:radial-gradient(circle at 32% 22%,#ffc48a,#ff8a2b 45%,#c2500c);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -3px 8px rgba(110,40,0,.4),0 0 28px rgba(255,138,43,.6),0 10px 20px rgba(0,0,0,.5)}
-.olabel{position:absolute;padding:7px 13px;border-radius:30px;font-size:13px;font-weight:600;white-space:nowrap;
-  background:radial-gradient(130% 160% at 50% -30%,rgba(255,255,255,.24),rgba(255,255,255,.06) 60%);
-  border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 16px rgba(0,0,0,.45);
-  transform:translate(-50%,-50%);pointer-events:none;transition:left .4s cubic-bezier(.16,1,.3,1),top .4s cubic-bezier(.16,1,.3,1)}
-.rank .row{gap:11px}
 .rk{width:22px;font-family:var(--mono);font-size:12px;color:var(--dim);flex-shrink:0}
-.ravatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:12.5px;color:#13221b;flex-shrink:0;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.55),0 4px 10px rgba(0,0,0,.4)}
+.ravatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:12.5px;color:#13221b;flex-shrink:0;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),0 4px 10px rgba(0,0,0,.4)}
 .rbar{height:5px;border-radius:5px;background:rgba(255,255,255,.07);margin-top:7px;overflow:hidden}
-.rbar b{display:block;height:100%;border-radius:5px;background:rgba(255,255,255,.35);width:0;transition:width .9s cubic-bezier(.16,1,.3,1),background .3s}
+.rbar b{display:block;height:100%;border-radius:5px;background:rgba(255,255,255,.35);width:0;transition:width .9s cubic-bezier(.16,1,.3,1)}
+.rank .row{cursor:pointer}
 .rank .row.sel .rbar b{background:linear-gradient(90deg,#ffb36b,#ff8a2b)}
 .rank .row.sel .n{color:#ffb36b}
 .rv{text-align:right;flex-shrink:0}
@@ -215,179 +244,371 @@ h2{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.1;margi
 .rv .t{font-size:11.5px;color:var(--mut);margin-top:2px}
 .rv .t.late{color:#f7c46a}
 
+/* ---------- kassa ---------- */
+.krow{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-top:1px solid var(--line);font-size:14px}
+.krow span{color:var(--mut)}
+.krow b{font-weight:600;font-variant-numeric:tabular-nums}
+.krow.tot{border-top:1px solid var(--line2);font-size:15.5px}
+.krow.tot span{color:var(--ink)}
+.cashin{display:flex;align-items:center;gap:8px;height:62px;margin-top:16px;border-radius:20px;padding:0 18px;
+  background:linear-gradient(180deg,#0a0f10,#101719);border:1px solid rgba(44,201,224,.25);box-shadow:inset 0 2px 8px rgba(0,0,0,.6)}
+.cashin input{flex:1;min-width:0;background:none;border:0;outline:none;font-family:var(--mono);font-size:24px;font-weight:600;color:#8ff0ff;text-shadow:0 0 12px rgba(44,201,224,.5)}
+.cashin input::placeholder{color:rgba(143,240,255,.25);text-shadow:none}
+.cashin small{font-family:var(--mono);font-size:12px;color:rgba(143,240,255,.55)}
+.verdict{margin-top:14px;border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:rgba(255,255,255,.035);transition:background .3s,border-color .3s}
+.verdict .vv{font-size:24px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.verdict.ok{background:rgba(34,214,143,.1);border-color:rgba(34,214,143,.3)}
+.verdict.bad{background:rgba(255,106,92,.1);border-color:rgba(255,106,92,.32)}
+.verdict.over{background:rgba(244,180,69,.1);border-color:rgba(244,180,69,.3)}
+.rqbtns{display:flex;gap:6px;flex-shrink:0}
+.sq{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--line2);background:rgba(255,255,255,.05);transition:transform .15s}
+.sq:active{transform:scale(.92)}
+.sq.ok{color:#5ff0b2} .sq.no{color:#ff8f84}
+
+/* ---------- qarzlar ---------- */
+.dhero{text-align:center;padding:26px 18px}
+.dhero .big2{font-size:clamp(38px,10vw,48px);font-weight:600;letter-spacing:-.04em;margin-top:10px;font-variant-numeric:tabular-nums}
+.dhero .big2 small{font-size:16px;color:var(--mut);font-weight:500;margin-left:5px;letter-spacing:0}
+.dstats{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:30px;font-size:12.5px;background:rgba(255,255,255,.06);border:1px solid var(--line2)}
+.chip b{font-weight:600}
+.sup .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.sup .rest{font-size:28px;font-weight:600;letter-spacing:-.035em;margin-top:14px;font-variant-numeric:tabular-nums}
+.sup .rest small{font-size:13px;color:var(--mut);font-weight:500;margin-left:4px;letter-spacing:0}
+.sup .of{font-size:12.5px;color:var(--mut);margin-top:3px}
+.paybox{display:none;gap:8px;margin-top:12px}
+.sup.open .paybox{display:flex}
+.paybox input{flex:1;min-width:0;height:48px;border-radius:16px;padding:0 14px;background:rgba(0,0,0,.3);border:1px solid rgba(155,123,255,.3);outline:none;font-family:var(--mono);font-size:16px;color:#d6c8ff}
+.vbtn{height:48px;padding:0 18px;border-radius:16px;font-weight:600;font-size:14px;color:#fff;
+  background:radial-gradient(130% 160% at 50% -30%,#cdbcff,#8d68ff 45%,#5a37d6);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 18px rgba(155,123,255,.35)}
+.gbtn{width:100%;height:46px;margin-top:14px;border-radius:16px;font-size:14px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid var(--line2)}
+.sup.open .gbtn{display:none}
+
+/* ---------- tarix ---------- */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.fchip{height:38px;padding:0 15px;border-radius:30px;font-size:13px;font-weight:500;white-space:nowrap;background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--mut);transition:all .25s}
+.fchip.on{background:linear-gradient(180deg,#fff,#e4e8e6);color:#0b0f0d;border-color:transparent}
+.tl{position:relative}
+.ev{display:flex;gap:14px;padding:12px 0;border-top:1px solid var(--line);align-items:center}
+.ev .tm{width:44px;flex-shrink:0;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.ev .amt{font-size:14.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ev.flag{background:linear-gradient(90deg,rgba(255,106,92,.08),transparent 70%);border-radius:14px;padding-left:8px;margin-left:-8px}
+
+/* ---------- pastki menyu (telefon) ---------- */
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;padding:0 14px calc(14px + env(safe-area-inset-bottom,0px))}
+.bar2{display:flex;gap:2px;width:100%;max-width:440px;padding:6px;border-radius:34px;
+  background:rgba(18,22,20,.74);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.1);box-shadow:0 18px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08)}
+.bar2 button{flex:1;height:56px;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-size:11px;font-weight:600;color:rgba(255,255,255,.55);transition:background .35s,color .35s;min-width:0}
+.bar2 button.on{background:linear-gradient(180deg,#fff,#e4e8e6);color:#0b0f0d;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+
+/* ---------- pastdan chiquvchi oyna ---------- */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;z-index:41;width:min(460px,100%);transform:translate(-50%,105%);transition:transform .45s cubic-bezier(.16,1,.3,1);
+  padding:10px 16px calc(18px + env(safe-area-inset-bottom,0px));border-radius:30px 30px 0 0;background:#111614;border:1px solid var(--line2);border-bottom:0;box-shadow:0 -20px 50px rgba(0,0,0,.6)}
+.sheet.on{transform:translate(-50%,0)}
+.grab{width:40px;height:5px;border-radius:5px;background:rgba(255,255,255,.2);margin:0 auto 14px}
+.sheet h3{font-family:var(--serif);font-weight:400;font-size:26px;margin:0 4px 12px}
+.sitem{display:flex;align-items:center;gap:14px;width:100%;padding:12px;border-radius:18px;text-align:left;transition:background .2s}
+.sitem:hover{background:rgba(255,255,255,.05)}
+
 .note{text-align:center;font-size:11px;color:var(--dim);margin:24px 0 6px;line-height:1.6}
 
-/* ===== pastki menyu ===== */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;justify-content:center;
-  padding:0 16px calc(14px + env(safe-area-inset-bottom,0px))}
-.bar2{display:flex;gap:4px;width:100%;max-width:420px;padding:6px;border-radius:34px;
-  background:rgba(18,22,20,.72);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);
-  border:1px solid rgba(255,255,255,.1);box-shadow:0 18px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08)}
-.bar2 button{flex:1;height:52px;border-radius:28px;display:flex;align-items:center;justify-content:center;gap:7px;
-  font-size:13.5px;font-weight:600;color:rgba(255,255,255,.6);transition:background .35s,color .35s}
-.bar2 button.on{background:linear-gradient(180deg,#ffffff,#e4e8e6);color:#0b0f0d;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+/* ================== KENG EKRAN: chap menyu ================== */
+@media (min-width:760px){
+  body{padding-bottom:0}
+  .bnav,.steps{display:none}
+  .app{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}
+  .side{display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:28px 16px 20px;
+    background:linear-gradient(180deg,rgba(10,14,12,.72),rgba(8,10,9,.86));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid var(--line)}
+  .slogo{display:flex;align-items:center;gap:11px;padding:0 8px}
+  .slogo .logo{width:34px;height:34px;border-radius:11px;background-size:3px 15px,15px 3px,auto}
+  .slogo .nm{font-family:var(--serif);font-size:30px;line-height:1;letter-spacing:-.01em}
+  .sver{font-size:11.5px;color:var(--dim);padding:8px 10px 0;letter-spacing:.06em}
+  .slbl{font-size:11.5px;color:var(--dim);margin:30px 10px 10px;letter-spacing:.06em}
+  .snav{display:flex;flex-direction:column;gap:3px}
+  .snav button{display:flex;align-items:center;gap:12px;height:46px;padding:0 14px;border-radius:15px;font-size:14px;font-weight:500;color:rgba(255,255,255,.62);
+    border:1px solid transparent;transition:background .25s,color .25s,border-color .25s;text-align:left}
+  .snav button:hover{background:rgba(255,255,255,.04);color:#fff}
+  .snav button .cnt{margin-left:auto;font-size:11px;font-weight:700;min-width:20px;height:20px;padding:0 6px;border-radius:10px;display:grid;place-items:center;background:rgba(255,106,92,.18);color:#ff8f84}
+  .snav button.on{color:#fff;font-weight:600;border-color:color-mix(in srgb,var(--acc) 45%,transparent);
+    background:linear-gradient(180deg,color-mix(in srgb,var(--acc) 26%,transparent),color-mix(in srgb,var(--acc) 10%,transparent));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 22px color-mix(in srgb,var(--acc) 22%,transparent)}
+  .snav button.on svg{color:var(--acc)}
+  .sfoot{margin-top:auto;padding:16px 10px 0;border-top:1px solid var(--line)}
+  .suser{display:flex;align-items:center;gap:10px}
+  .suser .av2{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:#13221b;background:radial-gradient(circle at 35% 25%,#fff,#9FE7C4 55%)}
+  .suser .nm2{font-size:13.5px;font-weight:600}
+  .suser .rl{font-size:11.5px;color:var(--mut)}
 
-@media (prefers-reduced-motion:reduce){
-  .panel.on{animation:none} .av,.bar b,.rbar b,.ob,.olabel,.hx,.steps i,.amb{transition:none}
+  .main{max-width:760px;margin:0;padding:28px 30px 40px}
+  .hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px}
+  .hrow{order:2;min-height:0}
+  .hrow .brand{display:none}
+  .hl{order:1;min-width:0}
+  .eyebrow{display:block}
+  h1{text-align:left;margin:6px 0 0;max-width:none;font-size:clamp(34px,3.6vw,46px)}
+  .tb.plus,.tb.fs.ok{display:grid}
+  .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .kpi{display:block;padding:18px 20px}
+  .kpi .v{font-size:24px;margin-top:16px}
+  .kpi .tr{text-align:left;margin-top:5px}
+  .g3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media (max-width:360px){ h1{font-size:34px} .big{font-size:40px} .pb{font-size:14px} }
+@media (min-width:1120px){
+  .app{grid-template-columns:256px minmax(0,1fr)}
+  .main{max-width:1280px;padding:32px 40px 48px}
+  .g2{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:start}
+  .g2.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .g2.flip{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .wallet .face{padding-top:30px}
+}
+@media (max-width:370px){ .pb{font-size:13.5px} .acts{gap:6px} .rb{width:48px;height:48px} }
+@media (prefers-reduced-motion:reduce){
+  .panel.on{animation:none} .av,.bar b,.rbar b,.ob,.hx,.steps i,.amb,.wk .b,.sheet,.scrim{transition:none}
+}
 </style>
 </head>
-<body>
-<div class="amb g on" data-a="umumiy"></div>
-<div class="amb b" data-a="zaxira"></div>
-<div class="amb a" data-a="xodim"></div>
+<body data-t="umumiy">
+<div class="amb on" data-a="umumiy"></div><div class="amb" data-a="zaxira"></div><div class="amb" data-a="xodim"></div>
+<div class="amb" data-a="kassa"></div><div class="amb" data-a="qarz"></div><div class="amb" data-a="tarix"></div>
 
-<div class="wrap">
-  <div class="top">
-    <div class="brand"><span class="logo" aria-hidden="true"></span><span id="brandName">Dorixonam</span></div>
-    <div class="date" id="bugun"></div>
-  </div>
-  <div class="steps" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+<div class="app">
+  <!-- ===== chap menyu (keng ekran) ===== -->
+  <aside class="side">
+    <div class="slogo"><span class="logo" aria-hidden="true"></span><span class="nm">Dorixonam</span></div>
+    <div class="sver">Apteka kabineti · beta</div>
+    <div class="slbl">Bo'limlar</div>
+    <div class="snav" id="snav"></div>
+    <div class="sfoot">
+      <div class="suser"><div class="av2" id="uIni">Eg</div><div><div class="nm2" id="uName">Egasi</div><div class="rl">Dorixona egasi</div></div></div>
+    </div>
+  </aside>
 
-  <!-- ================= UMUMIY ================= -->
-  <section class="panel on" id="p-umumiy">
-    <h1 id="title">Bugun tinch, hammasi joyida.</h1>
-
-    <div class="wallet">
-      <div class="face">
-        <span class="flabel">Bugungi sotuv</span>
-        <div class="big"><span id="heroNum">0</span><small>so'm</small></div>
-        <div class="fmeta"><b>↑ 18%</b> kechagidan · <b>47</b> ta chek</div>
+  <main class="main">
+    <header class="hdr">
+      <div class="hrow">
+        <div class="brand"><span class="logo" aria-hidden="true"></span><span>Dorixonam</span></div>
+        <div class="tools">
+          <button class="tb" id="bell" aria-label="Ogohlantirishlar"><i data-ic="bell"></i><span class="dot"></span></button>
+          <button class="tb" id="eye" aria-label="Summalarni yashirish"><i data-ic="eye"></i></button>
+          <button class="tb fs" id="fs" aria-label="To'liq ekran"><i data-ic="max"></i></button>
+          <button class="tb plus" id="plus" aria-label="Tezkor amallar"><i data-ic="plus"></i></button>
+        </div>
       </div>
-      <div class="avs" id="avs"></div>
-      <div class="shift" id="shift"></div>
+      <div class="hl">
+        <div class="eyebrow" id="eyebrow"></div>
+        <div class="steps" id="steps" aria-hidden="true"></div>
+        <h1 id="title"></h1>
+      </div>
+    </header>
 
-      <div class="tx">
-        <div class="txh"><span>Oxirgi sotuv</span><u data-go="xodim">Hammasi</u></div>
-        <div class="txr">
-          <div class="pillic" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+    <!-- ===================== UMUMIY ===================== -->
+    <section class="panel on" id="p-umumiy">
+      <div class="g2">
+        <div class="wallet">
+          <div class="face">
+            <span class="flabel">Bugungi sotuv</span>
+            <div class="big money"><span id="heroNum">0</span><small>so'm</small></div>
+            <div class="fmeta"><b>↑ 18%</b> kechagidan · <b>47</b> ta chek</div>
           </div>
-          <div>
-            <div class="txn">Parasetamol 500 mg</div>
-            <div class="txs">Dilnoza · 10:42</div>
+          <div class="avs" id="avs"></div>
+          <div class="shift" id="shift"></div>
+          <div class="tx">
+            <div class="txh"><span>Oxirgi sotuv</span><button class="link" data-go="tarix">Hammasi</button></div>
+            <div class="txr">
+              <div class="pillic" aria-hidden="true"><i data-ic="pill"></i></div>
+              <div><div class="txn">Parasetamol 500 mg</div><div class="txs">Dilnoza · 10:42</div></div>
+              <div class="txa money">25 000</div>
+            </div>
           </div>
-          <div class="txa">25 000</div>
+          <div class="acts">
+            <button class="rb" aria-label="Ogohlantirishlar" data-bell><i data-ic="bell"></i></button>
+            <button class="rb" aria-label="Kassa" data-go="kassa"><i data-ic="swapv"></i></button>
+            <button class="pb glass" data-go="tarix">Tarix ↓</button>
+            <button class="pb go" data-go="zaxira">Buyurtma ↑</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Kunlik reja</h2>
+          <div class="sub">Bugungi sotuv rejaga nisbatan</div>
+          <div class="gauge">
+            <svg viewBox="0 0 300 168" aria-hidden="true">
+              <defs><radialGradient id="knob" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#cfd6d3"/></radialGradient></defs>
+              <g id="ticks"></g>
+              <path id="glow" fill="none" stroke="#2ee696" stroke-width="12" stroke-linecap="round" opacity=".55" style="filter:blur(7px)"/>
+              <path id="arc" fill="none" stroke="#7dffc8" stroke-width="3" stroke-linecap="round"/>
+              <g id="knobG">
+                <circle r="13" fill="url(#knob)" style="filter:drop-shadow(0 4px 8px rgba(0,0,0,.6)) drop-shadow(0 0 10px rgba(46,230,150,.6))"/>
+                <rect x="-3.5" y="-5" width="2" height="10" rx="1" fill="#1b7a52"/><rect x="1.5" y="-5" width="2" height="10" rx="1" fill="#1b7a52"/>
+              </g>
+            </svg>
+            <div class="gcenter"><div class="gpct" id="gpct">0%</div><div class="gcap" id="gcap">bajarildi</div></div>
+          </div>
+          <div class="readout">
+            <button class="mini" id="tMinus" aria-label="Rejani kamaytirish">−</button>
+            <div class="lcd"><span id="lcd">1,50</span><small>mln</small></div>
+            <button class="mini" id="tPlus" aria-label="Rejani oshirish">+</button>
+          </div>
+          <div class="hint">‹ ‹ ‹ &nbsp;rejani sozlang&nbsp; › › ›</div>
         </div>
       </div>
 
-      <div class="acts">
-        <button class="rb" aria-label="Ogohlantirishlar" data-hap="light">
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-        </button>
-        <button class="rb" aria-label="Kassa mosligi" data-hap="light">
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
-        </button>
-        <button class="pb glass" data-hap="light">Hisobot ↓</button>
-        <button class="pb go" data-go="zaxira">Buyurtma ↑</button>
-      </div>
-    </div>
+      <div class="kpis" id="kpis"></div>
 
-    <div class="card">
-      <h2>Kunlik reja</h2>
-      <div class="sub">Bugungi sotuv rejaga nisbatan</div>
-      <div class="gauge">
-        <svg viewBox="0 0 300 168" id="gsvg" aria-hidden="true">
-          <defs>
-            <radialGradient id="knob" cx="35%" cy="30%" r="75%">
-              <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cfd6d3"/>
-            </radialGradient>
-          </defs>
-          <g id="ticks"></g>
-          <path id="glow" fill="none" stroke="#2ee696" stroke-width="12" stroke-linecap="round" opacity=".55" style="filter:blur(7px)"/>
-          <path id="arc" fill="none" stroke="#7dffc8" stroke-width="3" stroke-linecap="round"/>
-          <g id="knobG">
-            <circle r="13" fill="url(#knob)" style="filter:drop-shadow(0 4px 8px rgba(0,0,0,.6)) drop-shadow(0 0 10px rgba(46,230,150,.6))"/>
-            <rect x="-3.5" y="-5" width="2" height="10" rx="1" fill="#1b7a52"/>
-            <rect x="1.5" y="-5" width="2" height="10" rx="1" fill="#1b7a52"/>
-          </g>
-        </svg>
-        <div class="gcenter">
-          <div class="gpct" id="gpct">0%</div>
-          <div class="gcap" id="gcap">bajarildi</div>
+      <div class="g2">
+        <div class="card">
+          <div class="chead"><div><h2>Diqqat talab qiladi</h2><div class="sub" id="attnSub"></div></div><button class="link" data-go="zaxira">Zaxira</button></div>
+          <div class="list" id="attn"></div>
+        </div>
+        <div class="card">
+          <div class="chead"><div><h2>Haftalik sotuv</h2><div class="sub">Oxirgi 7 kun, mln so'm</div></div><span class="tag g money" id="wkSum"></span></div>
+          <div class="wk" id="wk"></div>
         </div>
       </div>
-      <div class="readout">
-        <button class="mini" id="tMinus" aria-label="Rejani kamaytirish">−</button>
-        <div class="lcd"><span id="lcd">1,50</span><small>mln</small></div>
-        <button class="mini" id="tPlus" aria-label="Rejani oshirish">+</button>
+    </section>
+
+    <!-- ===================== ZAXIRA ===================== -->
+    <section class="panel" id="p-zaxira">
+      <div class="g2 even">
+        <div class="card" style="padding-bottom:22px">
+          <div class="comb"><svg id="comb" role="group" aria-label="Dorilar"></svg></div>
+          <div class="legend"><span><i style="background:#ff6a5c"></i>Kam</span><span><i style="background:#f4b445"></i>O'rtacha</span><span><i style="background:#22d68f"></i>Yetarli</span></div>
+        </div>
+        <div class="card" id="det"></div>
       </div>
-      <div class="hint">‹ ‹ ‹ &nbsp;rejani sozlang&nbsp; › › ›</div>
-    </div>
+      <div class="card">
+        <div class="chead"><div><h2>Barcha dorilar</h2><div class="sub" id="stockSub"></div></div></div>
+        <label class="search"><i data-ic="search"></i><input id="q" type="search" placeholder="Dori nomini yozing" autocomplete="off"></label>
+        <div class="list" id="slist"></div>
+      </div>
+    </section>
 
-    <div class="card">
-      <h2>Diqqat talab qiladi</h2>
-      <div class="sub" id="attnSub"></div>
-      <div class="list" id="attn"></div>
-    </div>
-  </section>
+    <!-- ===================== XODIMLAR ===================== -->
+    <section class="panel" id="p-xodim">
+      <div class="g2 flip">
+        <div class="card orbitcard">
+          <div class="orbit" id="orbit"><div class="ring"></div>
+            <div class="ocore"><div class="on" id="on"></div><div class="v money" id="ov">0</div><div class="u" id="ou"></div></div>
+          </div>
+        </div>
+        <div class="card rank">
+          <h2>Reyting</h2><div class="sub">Oxirgi 7 kun · bugungi kelish vaqti</div>
+          <div class="list" id="rank"></div>
+        </div>
+      </div>
+    </section>
 
-  <!-- ================= ZAXIRA ================= -->
-  <section class="panel" id="p-zaxira">
-    <h1>Qaysi dorini tekshiramiz?</h1>
-    <div class="comb"><svg id="comb" role="group" aria-label="Dorilar"></svg></div>
-    <div class="legend">
-      <span><i style="background:#ff6a5c"></i>Kam</span>
-      <span><i style="background:#f4b445"></i>O'rtacha</span>
-      <span><i style="background:#22d68f"></i>Yetarli</span>
-    </div>
-    <div class="card det" id="det"></div>
-  </section>
+    <!-- ===================== KASSA ===================== -->
+    <section class="panel" id="p-kassa">
+      <div class="g2 even">
+        <div class="card">
+          <h2>Bugungi kassa</h2><div class="sub">Tizim botdagi sotuvlardan hisoblaydi</div>
+          <div class="list" id="kbreak"></div>
+          <label class="cashin"><input id="cash" inputmode="numeric" placeholder="Sanab chiqing" aria-label="Kassadagi naqd pul"><small>so'm</small></label>
+          <div class="verdict" id="verdict">
+            <div class="ico n"><i data-ic="scale"></i></div>
+            <div class="gr"><div class="n" id="vt">Kassadagi naqd pulni kiriting</div><div class="s" id="vs">Farq bo'lsa, tizim darhol ko'rsatadi</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="chead"><div><h2>Bekor qilish so'rovlari</h2><div class="sub">Xodim sotuvni o'zi o'chira olmaydi</div></div></div>
+          <div class="list" id="reqs"></div>
+          <h2 style="margin-top:24px">Oxirgi kunlar</h2><div class="sub">Kassa va tizim farqi</div>
+          <div class="list" id="khist"></div>
+        </div>
+      </div>
+    </section>
 
-  <!-- ================= XODIMLAR ================= -->
-  <section class="panel" id="p-xodim">
-    <h1>Bu hafta kim yetakchi?</h1>
-    <div class="orbit" id="orbit">
-      <div class="ring"></div>
-      <div class="ocore"><div class="on" id="on"></div><div class="v" id="ov">0</div><div class="u" id="ou"></div></div>
-    </div>
-    <div class="card rank">
-      <h2>Reyting</h2>
-      <div class="sub">Oxirgi 7 kun · bugungi kelish vaqti</div>
-      <div class="list" id="rank"></div>
-    </div>
-  </section>
+    <!-- ===================== QARZLAR ===================== -->
+    <section class="panel" id="p-qarz">
+      <div class="card dhero">
+        <span class="flabel" style="background:rgba(155,123,255,.16);border-color:rgba(155,123,255,.35)">Yetkazib beruvchilarga qarz</span>
+        <div class="big2 money"><span id="debtNum">0</span><small>so'm</small></div>
+        <div class="dstats" id="dstats"></div>
+      </div>
+      <div class="g3" id="sups"></div>
+    </section>
 
-  <div class="note">Namunaviy ma'lumot bilan ko'rsatilgan dizayn.<br>Haqiqiy ilovada raqamlar botning bazasidan keladi.</div>
+    <!-- ===================== TARIX ===================== -->
+    <section class="panel" id="p-tarix">
+      <div class="chips" id="fchips"></div>
+      <div class="card"><div class="tl" id="tl"></div></div>
+    </section>
+
+    <div class="note">Namunaviy ma'lumot bilan ko'rsatilgan dizayn.<br>Haqiqiy ilovada raqamlar botning bazasidan keladi.</div>
+  </main>
 </div>
 
-<nav><div class="bar2" role="tablist">
-  <button class="on" data-t="umumiy" role="tab">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Umumiy</button>
-  <button data-t="zaxira" role="tab">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 20.5 7.3v9.4L12 21.5l-8.5-4.8V7.3z"/></svg>Zaxira</button>
-  <button data-t="xodim" role="tab">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/></svg>Xodimlar</button>
-</div></nav>
+<!-- telefon: pastki menyu -->
+<nav class="bnav"><div class="bar2" id="bnav"></div></nav>
+
+<!-- pastdan chiquvchi oyna -->
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><h3 id="shT"></h3><div id="shB"></div></div>
 
 <script>
-/* ---------- Telegram Mini App ---------- */
+/* ================= ikonkalar ================= */
+const IC = {
+  home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  hex:'<path d="M12 2.5 20.5 7.3v9.4L12 21.5l-8.5-4.8V7.3z"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/>',
+  kassa:'<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M7 15h3"/>',
+  qarz:'<path d="m16 3 4 4-4 4M20 7H4M8 21l-4-4 4-4M4 17h16"/>',
+  tarix:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+  more:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff:'<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3 3.8M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.6 9.6 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  max:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  pill:'<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/>',
+  swapv:'<path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>',
+  warn:'<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  scale:'<path d="M12 3v18M5 21h14M6 8l-3 7a4 4 0 0 0 6 0Z M18 8l-3 7a4 4 0 0 0 6 0Z M5 6h14"/>',
+  cart:'<circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.5L22 8H6"/>',
+  login:'<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>',
+  undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>'
+};
+const svg = (k, sz) => `<svg class="i" viewBox="0 0 24 24"${sz?` style="width:${sz}px;height:${sz}px"`:""}>${IC[k]||""}</svg>`;
+function paintIcons(root){ (root||document).querySelectorAll("i[data-ic]").forEach(el=>{ el.outerHTML = svg(el.dataset.ic); }); }
+
+/* ================= Telegram ================= */
 const tg = window.Telegram && window.Telegram.WebApp;
-function hap(k){
-  try{
-    if(!tg || !tg.HapticFeedback) return;
-    if(!k || k==="select") tg.HapticFeedback.selectionChanged();
-    else tg.HapticFeedback.impactOccurred(k);
-  }catch(e){}
-}
+function hap(k){ try{ if(!tg||!tg.HapticFeedback) return; (!k||k==="select")?tg.HapticFeedback.selectionChanged():tg.HapticFeedback.impactOccurred(k);}catch(e){} }
 if (tg){
   tg.ready(); tg.expand();
   try{ tg.setHeaderColor("#060807"); tg.setBackgroundColor("#060807"); }catch(e){}
   const u = tg.initDataUnsafe && tg.initDataUnsafe.user;
-  if (u && u.first_name) document.getElementById("brandName").textContent = u.first_name;
+  if (u && u.first_name){ document.getElementById("uName").textContent = u.first_name; document.getElementById("uIni").textContent = u.first_name.slice(0,2); }
 }
 const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* ---------- namunaviy ma'lumot ---------- */
+/* ================= namunaviy ma'lumot ================= */
 const SALES = 1240000;
+const WEEK  = [0.82,1.05,0.94,1.31,1.12,1.38,1.24];
 const stock = [
-  {n:"Amoksitsillin", d:"500 mg", q:4,  max:30, exp:"2026-10-05"},
-  {n:"Parasetamol",   d:"500 mg", q:23, max:60, exp:"2027-03-01"},
-  {n:"Parasetamol",   d:"250 mg", q:8,  max:40, exp:"2027-01-15"},
-  {n:"Aspirin",       d:"100 mg", q:45, max:60, exp:"2026-11-20"},
-  {n:"Vitamin C",     d:"500 mg", q:60, max:80, exp:"2027-06-01"}
+  {n:"Amoksitsillin", d:"500 mg", q:4,  max:30, exp:5},
+  {n:"Parasetamol",   d:"500 mg", q:23, max:60, exp:149},
+  {n:"Parasetamol",   d:"250 mg", q:8,  max:40, exp:104},
+  {n:"Aspirin",       d:"100 mg", q:45, max:60, exp:48},
+  {n:"Vitamin C",     d:"500 mg", q:60, max:80, exp:241},
+  {n:"Ibuprofen",     d:"400 mg", q:31, max:50, exp:190},
+  {n:"Loratadin",     d:"10 mg",  q:12, max:40, exp:320},
+  {n:"Omeprazol",     d:"20 mg",  q:18, max:30, exp:75},
+  {n:"Sitramon",      d:"P",      q:52, max:70, exp:260},
+  {n:"Analgin",       d:"500 mg", q:6,  max:40, exp:410}
 ];
+const COMB_N = 5;
 const staff = [
   {n:"Dilnoza", s:12.3, c:145, t:"08:54", col:"#9FE7C4", on:true},
   {n:"Nilufar", s:9.2,  c:118, t:"09:01", col:"#F6B3C8", on:true},
@@ -395,206 +616,309 @@ const staff = [
   {n:"Jasur",   s:6.7,  c:84,  t:null,    col:"#B4C8FF", on:false},
   {n:"Madina",  s:5.4,  c:71,  t:"08:48", col:"#D9BDFC", on:true}
 ];
+const KASSA = {cash:820000, card:420000};
+let requests = [
+  {id:15, who:"Nilufar", item:"Vitamin C 500 mg × 1", sum:30000, why:"Xato yozildi", time:"11:02", st:"wait"},
+  {id:12, who:"Aziz",    item:"Aspirin 100 mg × 2",   sum:24000, why:"Mijoz qaytardi", time:"10:15", st:"wait"}
+];
+const KHIST = [{d:1,diff:0,who:"Dilnoza"},{d:2,diff:-20000,who:"Aziz"},{d:3,diff:0,who:"Madina"},{d:4,diff:0,who:"Nilufar"},{d:5,diff:-45000,who:"Aziz"}];
+const sups = [
+  {n:"Fayz-Farm",        total:5000000, paid:2000000, due:5},
+  {n:"Grand Pharm",      total:3400000, paid:2900000, due:-2},
+  {n:"Dori-Darmon MChJ", total:1200000, paid:0,       due:12},
+  {n:"Meros Farm",       total:800000,  paid:800000,  due:0}
+];
+const EVENTS = [
+  {t:"11:02", k:"bekor", txt:"Nilufar bekor qilishni so'radi", sub:"Vitamin C 500 mg × 1 · xato yozildi", amt:-30000, flag:true},
+  {t:"10:42", k:"sotuv", txt:"Parasetamol 500 mg × 5", sub:"Dilnoza", amt:25000},
+  {t:"10:15", k:"bekor", txt:"Aziz bekor qilishni so'radi", sub:"Aspirin 100 mg × 2 · mijoz qaytardi", amt:-24000, flag:true},
+  {t:"09:58", k:"sotuv", txt:"Ibuprofen 400 mg × 2", sub:"Nilufar", amt:36000},
+  {t:"09:40", k:"qarz",  txt:"Fayz-Farm'ga to'lov", sub:"Egasi kiritdi", amt:-2000000},
+  {t:"09:31", k:"sotuv", txt:"Amoksitsillin 500 mg × 1", sub:"Madina", amt:18000},
+  {t:"09:17", k:"davomat", txt:"Aziz ishga keldi", sub:"17 daqiqa kechikdi", flag:true},
+  {t:"09:01", k:"davomat", txt:"Nilufar ishga keldi", sub:"1 daqiqa kechikdi"},
+  {t:"08:54", k:"davomat", txt:"Dilnoza ishga keldi", sub:"O'z vaqtida"},
+  {t:"08:48", k:"davomat", txt:"Madina ishga keldi", sub:"O'z vaqtida"},
+  {t:"08:30", k:"sotuv", txt:"Kun ochildi", sub:"Zaxirada 3 ta dori kam qolgan"}
+];
 
-const money = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+/* ================= yordamchilar ================= */
+const money = n => (n<0?"−":"") + Math.round(Math.abs(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
 const dec = (n,d=2) => n.toFixed(d).replace(".",",");
+const mln = n => dec(n/1e6, n>=1e7?1:2);
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
-const left = d => Math.round((new Date(d+"T00:00:00") - TODAY)/864e5);
+const OY = ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentyabr","oktyabr","noyabr","dekabr"];
+const KUN = ["yakshanba","dushanba","seshanba","chorshanba","payshanba","juma","shanba"];
+const KQ = ["Ya","Du","Se","Ch","Pa","Ju","Sh"];
+const dayAdd = n => { const d = new Date(TODAY); d.setDate(d.getDate()+n); return d; };
+const fmtD = d => d.getDate()+" "+OY[d.getMonth()];
 const status = x => x.q < 10 ? "low" : x.q < 25 ? "mid" : "ok";
 const STC = {low:"#FF6A5C", mid:"#F4B445", ok:"#22D68F"};
-
-/* sana */
-(function(){
-  const oy=["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentyabr","oktyabr","noyabr","dekabr"];
-  const kun=["yakshanba","dushanba","seshanba","chorshanba","payshanba","juma","shanba"];
-  document.getElementById("bugun").textContent = TODAY.getDate()+" "+oy[TODAY.getMonth()]+", "+kun[TODAY.getDay()];
-})();
-
+const STL = {low:"Kam qoldi", mid:"O'rtacha", ok:"Yetarli"};
+const STT = {low:"r", mid:"y", ok:"g"};
 function countUp(el, to, dur, fmt){
   if (RM){ el.textContent = fmt(to); return; }
   const t0 = performance.now();
-  (function f(t){
-    const p = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-p,4);
-    el.textContent = fmt(to*e);
-    if (p<1) requestAnimationFrame(f);
-  })(t0);
+  (function f(t){ const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,4); el.textContent = fmt(to*e); if(p<1) requestAnimationFrame(f); })(t0);
+}
+function grow(sel, prop){
+  document.querySelectorAll(sel).forEach(b=>{
+    const w = b.dataset.w + "%";
+    if (RM){ b.style[prop] = w; return; }
+    b.style[prop] = "0"; requestAnimationFrame(()=>requestAnimationFrame(()=>b.style[prop] = w));
+  });
 }
 
+/* ================= bo'limlar ================= */
+const TABS = [
+  {id:"umumiy", nm:"Umumiy",   ic:"home",  eb:"Umumiy ko'rinish"},
+  {id:"zaxira", nm:"Zaxira",   ic:"hex",   eb:"Zaxira va muddatlar", h:"Qaysi dorini tekshiramiz?"},
+  {id:"xodim",  nm:"Xodimlar", ic:"users", eb:"Xodimlar va davomat", h:"Bu hafta kim yetakchi?"},
+  {id:"kassa",  nm:"Kassa",    ic:"kassa", eb:"Kassa nazorati",      h:"Kassa mos keladimi?"},
+  {id:"qarz",   nm:"Qarzlar",  ic:"qarz",  eb:"Yetkazib beruvchilar",h:"Kimga qancha qarzmiz?"},
+  {id:"tarix",  nm:"Tarix",    ic:"tarix", eb:"Bugungi voqealar",    h:"Bugun nima bo'ldi?"}
+];
+const MOBILE = ["umumiy","zaxira","xodim","kassa"];
+let cur = "umumiy";
+const low = stock.filter(x=>x.q<10), soon = stock.filter(x=>x.exp<=60);
+const attnN = new Set([...low,...soon]).size;
+TABS[0].h = attnN ? attnN + " ta dori e'tiboringizni kutmoqda." : "Bugun tinch, hammasi joyida.";
+
+function badge(id){
+  if (id==="kassa") return requests.filter(r=>r.st==="wait").length;
+  if (id==="zaxira") return low.length;
+  if (id==="qarz") return sups.filter(s=>s.due<0 && s.paid<s.total).length;
+  return 0;
+}
+function buildNav(){
+  document.getElementById("snav").innerHTML = TABS.map(t=>{
+    const b = badge(t.id);
+    return `<button data-t="${t.id}" class="${t.id===cur?"on":""}">${svg(t.ic)}<span>${t.nm}</span>${b?`<span class="cnt">${b}</span>`:""}</button>`;
+  }).join("");
+  const mob = MOBILE.map(id=>TABS.find(t=>t.id===id));
+  const moreOn = !MOBILE.includes(cur);
+  document.getElementById("bnav").innerHTML = mob.map(t=>`<button data-t="${t.id}" class="${t.id===cur?"on":""}">${svg(t.ic,20)}${t.nm}</button>`).join("")
+    + `<button id="moreBtn" class="${moreOn?"on":""}">${svg("more",20)}Yana</button>`;
+  document.querySelectorAll("#snav button,#bnav button[data-t]").forEach(b=>b.onclick=()=>{ hap(); go(b.dataset.t); });
+  document.getElementById("moreBtn").onclick = ()=>{ hap(); openSheet("Yana", ["qarz","tarix"].map(id=>{
+    const t = TABS.find(x=>x.id===id); return {ic:t.ic, cls:id==="qarz"?"v":"r", t:t.nm, s:t.eb, go:id};
+  })); };
+  document.getElementById("steps").innerHTML = TABS.map(t=>`<i class="${t.id===cur?"on":""}"></i>`).join("");
+  const n = attnN + badge("kassa");
+  document.getElementById("bell").classList.toggle("has", n>0);
+}
+function setHead(){
+  const t = TABS.find(x=>x.id===cur);
+  document.getElementById("title").textContent = t.h;
+  document.getElementById("eyebrow").textContent = t.eb + " · " + fmtD(TODAY) + " " + TODAY.getFullYear() + ", " + KUN[TODAY.getDay()];
+}
+const RENDER = {};
+function go(t){
+  cur = t; document.body.dataset.t = t;
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on", p.id==="p-"+t));
+  document.querySelectorAll(".amb").forEach(a=>a.classList.toggle("on", a.dataset.a===t));
+  buildNav(); setHead(); closeSheet();
+  if (RENDER[t]) RENDER[t]();
+  window.scrollTo({top:0, behavior: RM?"auto":"smooth"});
+}
+
+/* ================= sheet ================= */
+const scrim = document.getElementById("scrim"), sheet = document.getElementById("sheet");
+function openSheet(title, items){
+  document.getElementById("shT").textContent = title;
+  document.getElementById("shB").innerHTML = items.map((it,i)=>
+    `<button class="sitem" data-i="${i}"><div class="ico ${it.cls}">${svg(it.ic)}</div><div class="gr"><div class="n">${it.t}</div><div class="s">${it.s}</div></div></button>`).join("");
+  document.querySelectorAll("#shB .sitem").forEach(b=>b.onclick=()=>{ hap(); go(items[+b.dataset.i].go); });
+  scrim.classList.add("on"); sheet.classList.add("on");
+}
+function closeSheet(){ scrim.classList.remove("on"); sheet.classList.remove("on"); }
+scrim.onclick = closeSheet;
+document.addEventListener("keydown", e=>{ if (e.key==="Escape") closeSheet(); });
+
+/* ================= sarlavha tugmalari ================= */
+const eye = document.getElementById("eye");
+eye.onclick = ()=>{
+  hap("light"); const h = document.body.classList.toggle("hide");
+  eye.innerHTML = svg(h?"eyeoff":"eye"); eye.setAttribute("aria-label", h?"Summalarni ko'rsatish":"Summalarni yashirish");
+};
+function bellAction(){ hap("light"); openSheet("Ogohlantirishlar", [
+  ...low.map(x=>({ic:"warn", cls:"r", t:`${x.n} ${x.d}`, s:`${x.q} dona qoldi`, go:"zaxira"})),
+  ...requests.filter(r=>r.st==="wait").map(r=>({ic:"undo", cls:"y", t:`${r.who}: bekor qilish so'rovi`, s:r.item, go:"kassa"})),
+  ...sups.filter(s=>s.due<0 && s.paid<s.total).map(s=>({ic:"qarz", cls:"v", t:`${s.n} to'lovi kechikdi`, s:`${-s.due} kun o'tdi`, go:"qarz"}))
+]); }
+document.getElementById("bell").onclick = bellAction;
+document.querySelectorAll("[data-bell]").forEach(b=>b.onclick = bellAction);
+document.getElementById("plus").onclick = ()=>{ hap("light"); openSheet("Tezkor amallar", [
+  {ic:"kassa", cls:"b", t:"Kassani tekshirish", s:"Naqd pulni sanab, tizim bilan solishtiring", go:"kassa"},
+  {ic:"cart",  cls:"g", t:"Buyurtma ro'yxati", s:"Kam qolgan dorilarni belgilang", go:"zaxira"},
+  {ic:"qarz",  cls:"v", t:"Qarz to'lovini kiritish", s:"Yetkazib beruvchiga to'langan summa", go:"qarz"}
+]); };
+const fsb = document.getElementById("fs");
+if (tg && typeof tg.requestFullscreen === "function"){
+  fsb.classList.add("ok");
+  fsb.onclick = ()=>{ hap("light"); try{ tg.isFullscreen ? tg.exitFullscreen() : tg.requestFullscreen(); }catch(e){} };
+}
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ hap("light"); go(b.dataset.go); }));
+
 /* ================= UMUMIY ================= */
-const low  = stock.filter(x => x.q < 10);
-const soon = stock.filter(x => left(x.exp) <= 60);
-const attnN = new Set([...low, ...soon]).size;
-if (attnN) document.getElementById("title").textContent = attnN + " ta dori e'tiboringizni kutmoqda.";
-
 countUp(document.getElementById("heroNum"), SALES, 1300, money);
-
-/* smenadagi xodimlar */
 (function(){
   const box = document.getElementById("avs");
-  box.innerHTML = staff.map(p =>
-    `<div class="av${p.on?"":" off"}" style="background:radial-gradient(circle at 35% 25%,#fff,${p.col} 55%)" title="${p.n}">${p.n.slice(0,2)}</div>`
-  ).join("");
+  box.innerHTML = staff.map(p=>`<div class="av${p.on?"":" off"}" style="background:radial-gradient(circle at 35% 25%,#fff,${p.col} 55%)" title="${p.n}">${p.n.slice(0,2)}</div>`).join("");
   const onN = staff.filter(p=>p.on).length;
   document.getElementById("shift").textContent = `Smenada ${onN} kishi · ${staff.length-onN} kishi kelmadi`;
-  box.querySelectorAll(".av").forEach((a,i)=>{
-    if (RM) a.classList.add("in"); else setTimeout(()=>a.classList.add("in"), 420 + i*70);
-  });
-})();
+  box.querySelectorAll(".av").forEach((a,i)=>{ if (RM) a.classList.add("in"); else setTimeout(()=>a.classList.add("in"), 420+i*70); });
 
-/* diqqat ro'yxati */
-(function(){
+  const wk = WEEK.reduce((a,b)=>a+b,0);
+  document.getElementById("kpis").innerHTML = [
+    {l:"Bugun", d:fmtD(TODAY), v:SALES, tr:"↑ 18% kechagidan", up:true},
+    {l:"Shu hafta", d:fmtD(dayAdd(-6))+" — "+fmtD(TODAY), v:wk*1e6, tr:"↑ 9% o'tgan haftadan", up:true},
+    {l:"Shu oy", d:"1 — "+fmtD(TODAY), v:4.21e6, tr:"↓ 4% o'tgan oy shu kunlarga", up:false}
+  ].map(k=>`<div class="kpi"><div><div class="l">${k.l}</div><div class="d">${k.d}</div></div>
+     <div><div class="v money">${k.v>=1e7?mln(k.v)+"<small>mln</small>":money(k.v)+"<small>so'm</small>"}</div><div class="tr ${k.up?"up":"down"}">${k.tr}</div></div></div>`).join("");
+
   const items = [
-    ...low.map(x => ({n:`${x.n} ${x.d}`, s:`${x.q} dona qoldi`, k:"r", l:"Buyurtma",
-      i:'<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/>'})),
-    ...soon.map(x => {
-      const d = left(x.exp);
-      return {n:`${x.n} ${x.d}`, s: d < 0 ? "muddati o'tgan" : `${d} kundan keyin muddati tugaydi`, k:"y", l:"Muddat",
-        i:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'};
-    })
+    ...low.map(x=>({n:`${x.n} ${x.d}`, s:`${x.q} dona qoldi`, k:"r", l:"Buyurtma", i:"warn"})),
+    ...soon.map(x=>({n:`${x.n} ${x.d}`, s:`${x.exp} kundan keyin muddati tugaydi`, k:"y", l:"Muddat", i:"clock"}))
   ];
   document.getElementById("attnSub").textContent = items.length ? `${items.length} ta holat` : "Hozircha hammasi joyida";
-  document.getElementById("attn").innerHTML = items.map(a =>
-    `<div class="row"><div class="ico ${a.k}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">${a.i}</svg></div>
-     <div class="gr"><div class="n">${a.n}</div><div class="s">${a.s}</div></div><span class="tag ${a.k}">${a.l}</span></div>`
-  ).join("");
+  document.getElementById("attn").innerHTML = items.map(a=>
+    `<div class="row"><div class="ico ${a.k}">${svg(a.i)}</div><div class="gr"><div class="n">${a.n}</div><div class="s">${a.s}</div></div><span class="tag ${a.k}">${a.l}</span></div>`).join("");
+
+  const mx = Math.max(...WEEK);
+  document.getElementById("wkSum").textContent = dec(wk,2) + " mln";
+  document.getElementById("wk").innerHTML = WEEK.map((v,i)=>{
+    const d = dayAdd(i-6), now = i===6;
+    return `<div class="c${now?" now":""}"><div class="v money">${dec(v,2)}</div><div class="b" data-w="${Math.round(v/mx*100)}"></div><div class="dl">${now?"Bugun":KQ[d.getDay()]}</div></div>`;
+  }).join("");
+  setTimeout(()=>grow("#wk .b","height"), 300);
 })();
 
 /* gauge */
 const G = {cx:150, cy:150, rArc:100, r1:114, n:41};
 let target = 1.5, shown = 0;
-function pt(r, th){ return [G.cx + r*Math.cos(th), G.cy - r*Math.sin(th)]; }
+const pt = (r,th) => [G.cx + r*Math.cos(th), G.cy - r*Math.sin(th)];
 function drawGauge(p){
-  p = Math.max(0, Math.min(1, p));
-  let html = "";
+  p = Math.max(0, Math.min(1, p)); let html = "";
   for (let i=0;i<G.n;i++){
     const f = i/(G.n-1), th = Math.PI*(1-f), major = i%5===0, lab = i%10===0;
-    const [x1,y1] = pt(G.r1, th), [x2,y2] = pt(G.r1 + (major?18:11), th);
-    const lit = f <= p + 1e-6;
-    const col = lit ? (major ? "#9affd6" : "#2ee696") : "rgba(255,255,255,.17)";
-    html += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${col}" stroke-width="${major?2.4:1.7}" stroke-linecap="round"/>`;
-    if (lab){
-      const [lx,ly] = pt(G.r1+30, th);
-      html += `<text x="${lx.toFixed(1)}" y="${(ly+3.5).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="rgba(255,255,255,.34)" font-family="Geist,Arial">${Math.round(f*100)}</text>`;
-    }
+    const [x1,y1] = pt(G.r1, th), [x2,y2] = pt(G.r1+(major?18:11), th), lit = f <= p+1e-6;
+    html += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${lit?(major?"#9affd6":"#2ee696"):"rgba(255,255,255,.17)"}" stroke-width="${major?2.4:1.7}" stroke-linecap="round"/>`;
+    if (lab){ const [lx,ly] = pt(G.r1+30, th); html += `<text x="${lx.toFixed(1)}" y="${(ly+3.5).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="rgba(255,255,255,.34)" font-family="Geist,Arial">${Math.round(f*100)}</text>`; }
   }
   document.getElementById("ticks").innerHTML = html;
   const [sx,sy] = pt(G.rArc, Math.PI), [ex,ey] = pt(G.rArc, Math.PI*(1-p));
-  const d = p < .002 ? "" : `M${sx},${sy} A${G.rArc},${G.rArc} 0 0 1 ${ex.toFixed(2)},${ey.toFixed(2)}`;
-  document.getElementById("arc").setAttribute("d", d);
-  document.getElementById("glow").setAttribute("d", d);
+  const d = p<.002 ? "" : `M${sx},${sy} A${G.rArc},${G.rArc} 0 0 1 ${ex.toFixed(2)},${ey.toFixed(2)}`;
+  document.getElementById("arc").setAttribute("d", d); document.getElementById("glow").setAttribute("d", d);
   document.getElementById("knobG").setAttribute("transform", `translate(${ex.toFixed(2)},${ey.toFixed(2)})`);
 }
-function updateGauge(animate){
-  const ratio = (SALES/1e6) / target;
+function updateGauge(anim){
+  const ratio = (SALES/1e6)/target, pctEl = document.getElementById("gpct");
   document.getElementById("lcd").textContent = dec(target);
-  const pctEl = document.getElementById("gpct");
-  document.getElementById("gcap").textContent = ratio >= 1 ? "reja oshirib bajarildi" : "rejaning bajarildi";
-  const to = Math.min(1, ratio), from = shown, pctTo = Math.round(ratio*100);
-  if (!animate || RM){ shown = to; drawGauge(to); pctEl.textContent = pctTo+"%"; return; }
-  const t0 = performance.now(), dur = animate === "long" ? 1500 : 450, pctFrom = parseInt(pctEl.textContent)||0;
-  (function f(t){
-    const k = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-k,4);
-    shown = from + (to-from)*e; drawGauge(shown);
-    pctEl.textContent = Math.round(pctFrom + (pctTo-pctFrom)*e) + "%";
-    if (k<1) requestAnimationFrame(f);
-  })(t0);
+  document.getElementById("gcap").textContent = ratio>=1 ? "reja oshirib bajarildi" : "rejaning bajarildi";
+  const to = Math.min(1,ratio), from = shown, pTo = Math.round(ratio*100);
+  if (!anim || RM){ shown = to; drawGauge(to); pctEl.textContent = pTo+"%"; return; }
+  const t0 = performance.now(), dur = anim==="long"?1500:450, pFrom = parseInt(pctEl.textContent)||0;
+  (function f(t){ const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,4); shown = from+(to-from)*e; drawGauge(shown);
+    pctEl.textContent = Math.round(pFrom+(pTo-pFrom)*e)+"%"; if(k<1) requestAnimationFrame(f); })(t0);
 }
 document.getElementById("tMinus").onclick = ()=>{ if (target>0.5){ target=Math.round((target-0.1)*10)/10; hap(); updateGauge(true);} };
 document.getElementById("tPlus").onclick  = ()=>{ if (target<3){   target=Math.round((target+0.1)*10)/10; hap(); updateGauge(true);} };
-drawGauge(0);
-setTimeout(()=>updateGauge("long"), 250);
+drawGauge(0); setTimeout(()=>updateGauge("long"), 250);
+RENDER.umumiy = ()=>grow("#wk .b","height");
 
 /* ================= ZAXIRA ================= */
-let selStock = stock.reduce((a,x,i,arr)=> x.q/x.max < arr[a].q/arr[a].max ? i : a, 0);
-const listAdded = new Set();
-function hexPath(cx, cy, r, rad){
-  const P = [];
-  for (let k=0;k<6;k++){ const a = Math.PI/180*(60*k-90); P.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]); }
+const combIdx = stock.map((x,i)=>i).sort((a,b)=>stock[a].q/stock[a].max - stock[b].q/stock[b].max).slice(0,COMB_N);
+let selStock = combIdx[0];
+const ordered = new Set();
+function hexPath(cx,cy,r,rad){
+  const P = []; for (let k=0;k<6;k++){ const a = Math.PI/180*(60*k-90); P.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]); }
   let d = "";
   for (let k=0;k<6;k++){
-    const p0 = P[(k+5)%6], p1 = P[k], p2 = P[(k+1)%6];
-    const v1 = [p0[0]-p1[0], p0[1]-p1[1]], v2 = [p2[0]-p1[0], p2[1]-p1[1]];
-    const l1 = Math.hypot(...v1), l2 = Math.hypot(...v2);
-    const a = [p1[0]+v1[0]/l1*rad, p1[1]+v1[1]/l1*rad], b = [p1[0]+v2[0]/l2*rad, p1[1]+v2[1]/l2*rad];
-    d += (k===0 ? "M" : "L") + a[0].toFixed(1)+","+a[1].toFixed(1) + " Q"+p1[0].toFixed(1)+","+p1[1].toFixed(1)+" "+b[0].toFixed(1)+","+b[1].toFixed(1)+" ";
+    const p0=P[(k+5)%6], p1=P[k], p2=P[(k+1)%6], v1=[p0[0]-p1[0],p0[1]-p1[1]], v2=[p2[0]-p1[0],p2[1]-p1[1]];
+    const l1=Math.hypot(...v1), l2=Math.hypot(...v2), a=[p1[0]+v1[0]/l1*rad,p1[1]+v1[1]/l1*rad], b=[p1[0]+v2[0]/l2*rad,p1[1]+v2[1]/l2*rad];
+    d += (k?"L":"M")+a[0].toFixed(1)+","+a[1].toFixed(1)+" Q"+p1[0].toFixed(1)+","+p1[1].toFixed(1)+" "+b[0].toFixed(1)+","+b[1].toFixed(1)+" ";
   }
-  return d + "Z";
+  return d+"Z";
 }
 function buildComb(){
-  const s = 55, f = 1.07, slots = [[0,0],[-1,0],[1,0],[0,-1],[1,-1],[-1,1]];
-  const pos = slots.map(([q,r]) => [s*Math.sqrt(3)*(q + r/2)*f, s*1.5*r*f]);
-  const minX = Math.min(...pos.map(p=>p[0])) - s, maxX = Math.max(...pos.map(p=>p[0])) + s;
-  const minY = Math.min(...pos.map(p=>p[1])) - s - 4, maxY = Math.max(...pos.map(p=>p[1])) + s + 4;
-  const svg = document.getElementById("comb");
-  svg.setAttribute("viewBox", `${(minX-14).toFixed(0)} ${(minY-14).toFixed(0)} ${(maxX-minX+28).toFixed(0)} ${(maxY-minY+28).toFixed(0)}`);
+  const s=55, f=1.07, slots=[[0,0],[-1,0],[1,0],[0,-1],[1,-1],[-1,1]];
+  const pos = slots.map(([q,r])=>[s*Math.sqrt(3)*(q+r/2)*f, s*1.5*r*f]);
+  const xs = pos.map(p=>p[0]), ys = pos.map(p=>p[1]);
+  const svgEl = document.getElementById("comb");
+  svgEl.setAttribute("viewBox", `${Math.round(Math.min(...xs)-s-14)} ${Math.round(Math.min(...ys)-s-18)} ${Math.round(Math.max(...xs)-Math.min(...xs)+2*s+28)} ${Math.round(Math.max(...ys)-Math.min(...ys)+2*s+36)}`);
   let html = `<defs>
     <linearGradient id="hDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d353c"/><stop offset="1" stop-color="#111518"/></linearGradient>
     <radialGradient id="hSel" cx="38%" cy="22%" r="85%"><stop offset="0" stop-color="#b6d4ff"/><stop offset=".35" stop-color="#5a92ff"/><stop offset="1" stop-color="#1c3fb8"/></radialGradient>
-    <linearGradient id="hSheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
-  </defs>`;
-  const r = s*0.985;
-  stock.forEach((x,i)=>{
-    const [cx,cy] = pos[i], sel = i===selStock, st = status(x);
-    html += `<g class="hx${sel?" sel":""}" data-i="${i}" tabindex="0" role="button" aria-label="${x.n} ${x.d}, ${x.q} dona">
-      <path class="edge" d="${hexPath(cx,cy,r,13)}" fill="${sel?"url(#hSel)":"url(#hDark)"}" stroke="${sel?"rgba(255,255,255,.35)":"rgba(255,255,255,.1)"}" stroke-width="1"/>
+    <linearGradient id="hSheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>`;
+  const r = s*.985;
+  combIdx.forEach((si,k)=>{
+    const x = stock[si], [cx,cy] = pos[k], sel = si===selStock, st = status(x);
+    html += `<g class="hx${sel?" sel":""}" data-i="${si}" tabindex="0" role="button" aria-label="${x.n} ${x.d}, ${x.q} dona">
+      <path class="edge" d="${hexPath(cx,cy,r,13)}" fill="${sel?"url(#hSel)":"url(#hDark)"}" stroke="${sel?"rgba(255,255,255,.35)":"rgba(255,255,255,.1)"}"/>
       <path d="${hexPath(cx,cy,r-2,12)}" fill="url(#hSheen)"/>
-      <circle cx="${cx}" cy="${cy-26}" r="4" fill="${sel?"#fff":STC[st]}" ${sel?"":`style="filter:drop-shadow(0 0 5px ${STC[st]})"`}/>
+      <circle cx="${cx}" cy="${cy-26}" r="4" fill="${sel?"#fff":STC[st]}"${sel?"":` style="filter:drop-shadow(0 0 5px ${STC[st]})"`}/>
       <text x="${cx}" y="${cy+1}" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">${x.n}</text>
-      <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="11" fill="${sel?"rgba(255,255,255,.85)":"rgba(255,255,255,.5)"}">${x.d}</text>
-    </g>`;
+      <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="11" fill="${sel?"rgba(255,255,255,.85)":"rgba(255,255,255,.5)"}">${x.d}</text></g>`;
   });
   const [ax,ay] = pos[5];
-  html += `<g opacity=".55"><path d="${hexPath(ax,ay,r,13)}" fill="none" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 5"/>
-    <text x="${ax}" y="${ay-2}" text-anchor="middle" font-size="22" fill="rgba(255,255,255,.6)" font-family="Geist,Arial">+</text>
-    <text x="${ax}" y="${ay+17}" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.5)" font-family="Geist,Arial">Qo'shish</text></g>`;
-  svg.innerHTML = html;
-  svg.querySelectorAll(".hx").forEach(g=>{
-    const pick = ()=>{ selStock = +g.dataset.i; hap(); buildComb(); renderDetail(); const n = svg.querySelector(`.hx[data-i="${selStock}"]`); if (n) n.focus({preventScroll:true}); };
+  html += `<g opacity=".55" style="cursor:pointer" id="combMore"><path d="${hexPath(ax,ay,r,13)}" fill="none" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 5"/>
+    <text x="${ax}" y="${ay-2}" text-anchor="middle" font-size="22" fill="rgba(255,255,255,.6)" font-family="Geist,Arial">+${stock.length-COMB_N}</text>
+    <text x="${ax}" y="${ay+17}" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.5)" font-family="Geist,Arial">yana dori</text></g>`;
+  svgEl.innerHTML = html;
+  svgEl.querySelectorAll(".hx").forEach(g=>{
+    const pick = ()=>{ selStock=+g.dataset.i; hap(); buildComb(); renderDetail(); renderList(); };
     g.addEventListener("click", pick);
-    g.addEventListener("keydown", e=>{ if (e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); }});
+    g.addEventListener("keydown", e=>{ if (e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
   });
+  document.getElementById("combMore").onclick = ()=>{ hap(); document.getElementById("q").focus(); document.getElementById("slist").scrollIntoView({behavior:RM?"auto":"smooth", block:"center"}); };
 }
 function renderDetail(){
-  const x = stock[selStock], st = status(x), d = left(x.exp), pct = Math.min(100, Math.round(x.q/x.max*100));
-  const label = {low:"Kam qoldi", mid:"O'rtacha", ok:"Yetarli"}[st];
-  const added = listAdded.has(selStock);
-  const need = Math.max(0, x.max - x.q);
+  const x = stock[selStock], st = status(x), pct = Math.min(100, Math.round(x.q/x.max*100)), need = Math.max(0, x.max-x.q), on = ordered.has(selStock);
   document.getElementById("det").innerHTML = `
-    <div class="dhead">
-      <div><h2>${x.n} ${x.d}</h2><div class="sub">Omborda va javonda jami</div></div>
-      <span class="tag ${st==="low"?"r":"y"}" style="${st==="ok"?"background:rgba(34,214,143,.13);color:#5ff0b2;border:1px solid rgba(34,214,143,.25)":""}">${label}</span>
-    </div>
+    <div class="chead"><div><h2>${x.n} ${x.d}</h2><div class="sub">Omborda va javonda jami</div></div><span class="tag ${STT[st]}">${STL[st]}</span></div>
     <div class="qty"><b>${x.q}</b><span>/ ${x.max} dona</span></div>
-    <div class="bar"><b id="dbar" style="background:linear-gradient(90deg,${STC[st]}cc,${STC[st]})"></b></div>
+    <div class="bar"><b data-w="${pct}" id="dbar" style="background:linear-gradient(90deg,${STC[st]}cc,${STC[st]})"></b></div>
     <div class="facts">
-      <div class="fact"><div class="l">Muddati</div><div class="v">${d<0?"o'tgan":d+" kun"}</div></div>
+      <div class="fact"><div class="l">Muddati</div><div class="v">${x.exp} kun</div></div>
       <div class="fact"><div class="l">Tavsiya buyurtma</div><div class="v">${need} dona</div></div>
     </div>
-    <button class="wbtn${added?" done":""}" id="addBtn">${added?"Buyurtma ro'yxatida ✓":"Buyurtma ro'yxatiga qo'shish"}</button>`;
-  const bar = document.getElementById("dbar");
-  if (RM) bar.style.width = pct+"%"; else requestAnimationFrame(()=>requestAnimationFrame(()=>bar.style.width = pct+"%"));
-  document.getElementById("addBtn").onclick = ()=>{
-    if (listAdded.has(selStock)) listAdded.delete(selStock); else listAdded.add(selStock);
-    hap("medium"); renderDetail();
-  };
+    <button class="wbtn${on?" done":""}" id="addBtn">${on?"Buyurtma ro'yxatida ✓":"Buyurtma ro'yxatiga qo'shish"}</button>`;
+  grow("#dbar","width");
+  document.getElementById("addBtn").onclick = ()=>{ ordered.has(selStock)?ordered.delete(selStock):ordered.add(selStock); hap("medium"); renderDetail(); renderList(); };
 }
+function renderList(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const rows = stock.map((x,i)=>({x,i})).filter(({x})=>(x.n+" "+x.d).toLowerCase().includes(q)).sort((a,b)=>a.x.q/a.x.max - b.x.q/b.x.max);
+  document.getElementById("stockSub").textContent = `${stock.length} ta dori · ${ordered.size} tasi buyurtma ro'yxatida`;
+  document.getElementById("slist").innerHTML = rows.length ? rows.map(({x,i})=>{
+    const st = status(x), pct = Math.min(100, Math.round(x.q/x.max*100));
+    return `<div class="row srow${i===selStock?" sel":""}" data-i="${i}">
+      <div class="gr"><div class="n">${x.n} ${x.d}${ordered.has(i)?' <span class="tag g" style="margin-left:6px;padding:3px 8px">ro\'yxatda</span>':""}</div>
+      <div class="sbar"><b style="width:${pct}%;background:${STC[st]}"></b></div></div>
+      <div class="rv"><div class="a">${x.q} / ${x.max}</div><div class="t">${x.exp} kun</div></div></div>`;
+  }).join("") : `<div class="empty">"${q}" bo'yicha dori topilmadi</div>`;
+  document.querySelectorAll("#slist .srow").forEach(r=>r.onclick=()=>{
+    selStock = +r.dataset.i; hap();
+    if (!combIdx.includes(selStock)){ combIdx[combIdx.length-1] = selStock; }
+    buildComb(); renderDetail(); renderList();
+    document.getElementById("det").scrollIntoView({behavior:RM?"auto":"smooth", block:"nearest"});
+  });
+}
+document.getElementById("q").addEventListener("input", renderList);
+RENDER.zaxira = ()=>{ buildComb(); renderDetail(); renderList(); };
 
 /* ================= XODIMLAR ================= */
 let selStaff = 0;
 const ranked = [...staff].sort((a,b)=>b.s-a.s);
 function buildOrbit(){
-  const box = document.getElementById("orbit");
-  box.querySelectorAll(".ob").forEach(e=>e.remove());
-  const R = 121, C = 155;
+  const box = document.getElementById("orbit"); box.querySelectorAll(".ob").forEach(e=>e.remove());
+  const R=121, C=155;
   staff.forEach((p,i)=>{
-    const a = -Math.PI/2 + i*2*Math.PI/staff.length;
-    const b = document.createElement("button");
-    b.className = "ob" + (i===selStaff ? " sel" : "");
-    b.style.left = (C + R*Math.cos(a)) + "px";
-    b.style.top  = (C + R*Math.sin(a)) + "px";
-    b.textContent = p.n.slice(0,2);
-    b.setAttribute("aria-label", p.n);
-    b.onclick = ()=>{ selStaff = i; hap(); buildOrbit(); renderStaff(); };
+    const a = -Math.PI/2 + i*2*Math.PI/staff.length, b = document.createElement("button");
+    b.className = "ob"+(i===selStaff?" sel":""); b.style.left=(C+R*Math.cos(a))+"px"; b.style.top=(C+R*Math.sin(a))+"px";
+    b.textContent = p.n.slice(0,2); b.setAttribute("aria-label", p.n);
+    b.onclick = ()=>{ selStaff=i; hap(); buildOrbit(); renderStaff(); };
     box.appendChild(b);
   });
 }
@@ -605,35 +929,123 @@ function renderStaff(){
   document.getElementById("ou").textContent = `mln so'm · ${p.c} sotuv`;
   const top = ranked[0].s;
   document.getElementById("rank").innerHTML = ranked.map((r,k)=>{
-    const late = r.t && r.t > "09:00";
-    const tt = r.t ? (late ? `${r.t} · kechikdi` : `${r.t} da keldi`) : "bugun kelmadi";
-    return `<div class="row${r===p?" sel":""}">
-      <div class="rk">${String(k+1).padStart(2,"0")}</div>
+    const late = r.t && r.t>"09:00", tt = r.t ? (late?`${r.t} · kechikdi`:`${r.t} da keldi`) : "bugun kelmadi";
+    return `<div class="row${r===p?" sel":""}" data-n="${r.n}"><div class="rk">${String(k+1).padStart(2,"0")}</div>
       <div class="ravatar" style="background:radial-gradient(circle at 35% 25%,#fff,${r.col} 55%)">${r.n.slice(0,2)}</div>
       <div class="gr"><div class="n">${r.n}</div><div class="rbar"><b data-w="${Math.round(r.s/top*100)}"></b></div></div>
-      <div class="rv"><div class="a">${dec(r.s,1)} mln</div><div class="t${late||!r.t?" late":""}">${tt}</div></div>
+      <div class="rv"><div class="a money">${dec(r.s,1)} mln</div><div class="t${late||!r.t?" late":""}">${tt}</div></div></div>`;
+  }).join("");
+  document.querySelectorAll("#rank .row").forEach(r=>r.onclick=()=>{ selStaff = staff.findIndex(s=>s.n===r.dataset.n); hap(); buildOrbit(); renderStaff(); });
+  grow("#rank .rbar b","width");
+}
+RENDER.xodim = ()=>{ buildOrbit(); renderStaff(); };
+
+/* ================= KASSA ================= */
+function approvedCancel(){ return requests.filter(r=>r.st==="ok").reduce((a,r)=>a+r.sum,0); }
+function expectedCash(){ return KASSA.cash - approvedCancel(); }
+function renderKassa(){
+  const canc = approvedCancel();
+  document.getElementById("kbreak").innerHTML = `
+    <div class="krow"><span>Naqd sotuv</span><b class="money">${money(KASSA.cash)} so'm</b></div>
+    <div class="krow"><span>Karta (Click, Payme, Uzcard)</span><b class="money">${money(KASSA.card)} so'm</b></div>
+    <div class="krow"><span>Tasdiqlangan qaytarishlar</span><b class="money" style="color:${canc?"#ff8f84":"inherit"}">${canc?money(-canc):"0"} so'm</b></div>
+    <div class="krow tot"><span>Kassada bo'lishi kerak (naqd)</span><b class="money">${money(expectedCash())} so'm</b></div>`;
+  checkCash();
+  const w = requests.filter(r=>r.st==="wait");
+  document.getElementById("reqs").innerHTML = requests.map(r=>`
+    <div class="row"><div class="ico ${r.st==="wait"?"y":r.st==="ok"?"g":"n"}">${svg("undo")}</div>
+      <div class="gr"><div class="n">${r.who} · <span class="money">${money(r.sum)}</span></div><div class="s">${r.item} · ${r.why} · ${r.time}</div></div>
+      ${r.st==="wait" ? `<div class="rqbtns"><button class="sq ok" data-a="ok" data-id="${r.id}" aria-label="Tasdiqlash">${svg("check",17)}</button><button class="sq no" data-a="no" data-id="${r.id}" aria-label="Rad etish">${svg("x",17)}</button></div>`
+        : `<span class="tag ${r.st==="ok"?"g":"r"}">${r.st==="ok"?"Tasdiqlandi":"Rad etildi"}</span>`}
+    </div>`).join("") || `<div class="empty">So'rovlar yo'q</div>`;
+  document.querySelectorAll("#reqs .sq").forEach(b=>b.onclick=()=>{
+    const r = requests.find(x=>x.id===+b.dataset.id); r.st = b.dataset.a; hap(r.st==="ok"?"medium":"heavy"); renderKassa(); buildNav();
+  });
+  document.getElementById("khist").innerHTML = KHIST.map(h=>{
+    const d = dayAdd(-h.d), bad = h.diff<0;
+    return `<div class="row"><div class="ico ${bad?"r":"g"}">${svg(bad?"warn":"check")}</div>
+      <div class="gr"><div class="n">${fmtD(d)}, ${KUN[d.getDay()]}</div><div class="s">Smena: ${h.who}</div></div>
+      <span class="tag ${bad?"r":"g"} money">${bad?money(h.diff)+" so'm":"Mos"}</span></div>`;
+  }).join("");
+}
+function checkCash(){
+  const raw = document.getElementById("cash").value.replace(/\D/g,""), v = document.getElementById("verdict");
+  const vt = document.getElementById("vt"), vs = document.getElementById("vs");
+  v.className = "verdict";
+  if (!raw){ vt.textContent = "Kassadagi naqd pulni kiriting"; vs.textContent = "Farq bo'lsa, tizim darhol ko'rsatadi"; v.firstElementChild.className="ico n"; return; }
+  const diff = +raw - expectedCash();
+  if (diff===0){ v.classList.add("ok"); v.firstElementChild.className="ico g"; vt.innerHTML = `<span class="vv">Mos keladi</span>`; vs.textContent = "Kassa va tizim bir xil, hammasi joyida"; }
+  else if (diff<0){ v.classList.add("bad"); v.firstElementChild.className="ico r"; vt.innerHTML = `<span class="vv money">${money(diff)} so'm</span>`; vs.textContent = "Kassada pul yetishmayapti. Bekor qilish so'rovlarini va smenadagilarni tekshiring"; }
+  else { v.classList.add("over"); v.firstElementChild.className="ico y"; vt.innerHTML = `<span class="vv money">+${money(diff)} so'm</span>`; vs.textContent = "Kassada ortiqcha pul bor. Ehtimol, sotuv botga yozilmagan"; }
+}
+document.getElementById("cash").addEventListener("input", e=>{
+  const d = e.target.value.replace(/\D/g,"").slice(0,10);
+  e.target.value = d ? money(+d) : ""; checkCash();
+});
+RENDER.kassa = renderKassa;
+
+/* ================= QARZLAR ================= */
+let openSup = -1;
+function renderQarz(){
+  const rest = sups.reduce((a,s)=>a+(s.total-s.paid),0);
+  const late = sups.filter(s=>s.due<0 && s.paid<s.total).length;
+  const next = sups.filter(s=>s.due>=0 && s.paid<s.total).sort((a,b)=>a.due-b.due)[0];
+  countUp(document.getElementById("debtNum"), rest, 900, money);
+  document.getElementById("dstats").innerHTML =
+    `<span class="chip"><b>${sups.filter(s=>s.paid<s.total).length}</b> ta firma</span>`
+    + (late?`<span class="chip" style="border-color:rgba(255,106,92,.35);color:#ff8f84"><b>${late}</b> ta to'lov kechikdi</span>`:"")
+    + (next?`<span class="chip">Navbatdagi: <b>${next.n}</b>, ${next.due?next.due+" kunda":"bugun"}</span>`:"");
+  document.getElementById("sups").innerHTML = sups.map((s,i)=>{
+    const r = s.total-s.paid, pct = Math.round(s.paid/s.total*100), done = r<=0;
+    const tag = done ? `<span class="tag g">To'langan</span>` : s.due<0 ? `<span class="tag r">${-s.due} kun kechikdi</span>` : `<span class="tag v">${s.due?fmtD(dayAdd(s.due)):"Bugun"}</span>`;
+    return `<div class="card sup${openSup===i?" open":""}" data-i="${i}">
+      <div class="top"><div><h2 style="font-size:22px">${s.n}</h2></div>${tag}</div>
+      <div class="rest money">${money(Math.max(0,r))}<small>so'm qoldi</small></div>
+      <div class="of"><span class="money">${money(s.paid)}</span> / <span class="money">${money(s.total)}</span> to'langan</div>
+      <div class="bar"><b data-w="${pct}" style="background:linear-gradient(90deg,#8d68ff,#c3b0ff)"></b></div>
+      ${done?"":`<button class="gbtn">To'lov kiritish</button>
+      <div class="paybox"><input inputmode="numeric" placeholder="Summa" aria-label="To'lov summasi"><button class="vbtn">Saqlash</button></div>`}
     </div>`;
   }).join("");
-  document.querySelectorAll("#rank .rbar b").forEach(b=>{
-    if (RM) b.style.width = b.dataset.w+"%"; else requestAnimationFrame(()=>requestAnimationFrame(()=>b.style.width = b.dataset.w+"%"));
+  grow("#sups .bar b","width");
+  document.querySelectorAll("#sups .sup").forEach(c=>{
+    const i = +c.dataset.i, gb = c.querySelector(".gbtn"); if (!gb) return;
+    const inp = c.querySelector("input");
+    gb.onclick = ()=>{ openSup = i; hap(); renderQarz(); setTimeout(()=>{ const x=document.querySelector(`#sups .sup[data-i="${i}"] input`); if(x) x.focus(); },50); };
+    inp.addEventListener("input", ()=>{ const d = inp.value.replace(/\D/g,"").slice(0,10); inp.value = d?money(+d):""; });
+    const save = ()=>{ const v = +inp.value.replace(/\D/g,""); if (!v) return;
+      const s = sups[i]; s.paid = Math.min(s.total, s.paid+v); openSup = -1; hap("medium");
+      EVENTS.unshift({t:new Date().toTimeString().slice(0,5), k:"qarz", txt:`${s.n}'ga to'lov`, sub:"Mini ilovadan kiritildi", amt:-v});
+      renderQarz(); buildNav(); };
+    c.querySelector(".vbtn").onclick = save;
+    inp.addEventListener("keydown", e=>{ if (e.key==="Enter") save(); });
   });
 }
+RENDER.qarz = renderQarz;
 
-/* ================= bo'limlar ================= */
-const ORDER = ["umumiy","zaxira","xodim"];
-let built = {umumiy:true};
-function go(t){
-  document.querySelectorAll(".bar2 button").forEach(b=>{ const on = b.dataset.t===t; b.classList.toggle("on",on); b.setAttribute("aria-selected",on); });
-  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on", p.id==="p-"+t));
-  document.querySelectorAll(".amb").forEach(a=>a.classList.toggle("on", a.dataset.a===t));
-  document.querySelectorAll(".steps i").forEach((s,i)=>s.classList.toggle("on", i===ORDER.indexOf(t)));
-  if (t==="zaxira"){ buildComb(); renderDetail(); }
-  if (t==="xodim"){ buildOrbit(); renderStaff(); }
-  window.scrollTo({top:0, behavior: RM ? "auto" : "smooth"});
+/* ================= TARIX ================= */
+const FILTERS = [["all","Hammasi"],["sotuv","Sotuvlar"],["bekor","Bekor qilish"],["davomat","Davomat"],["qarz","Qarzlar"]];
+let flt = "all";
+const EVIC = {sotuv:["cart","g"], bekor:["undo","r"], davomat:["login","b"], qarz:["qarz","v"]};
+function renderTarix(){
+  document.getElementById("fchips").innerHTML = FILTERS.map(([k,l])=>{
+    const n = k==="all" ? EVENTS.length : EVENTS.filter(e=>e.k===k).length;
+    return `<button class="fchip${flt===k?" on":""}" data-k="${k}">${l} · ${n}</button>`;
+  }).join("");
+  document.querySelectorAll("#fchips .fchip").forEach(b=>b.onclick=()=>{ flt=b.dataset.k; hap(); renderTarix(); });
+  const list = EVENTS.filter(e=>flt==="all"||e.k===flt);
+  document.getElementById("tl").innerHTML = list.map((e,i)=>{
+    const [ic,c] = EVIC[e.k];
+    return `<div class="ev${e.flag?" flag":""}"${i===0?' style="border-top:0"':""}><div class="tm">${e.t}</div><div class="ico ${c}">${svg(ic)}</div>
+      <div class="gr"><div class="n">${e.txt}</div><div class="s">${e.sub}</div></div>
+      ${e.amt!=null?`<div class="amt money" style="color:${e.amt<0?"#ff8f84":"#5ff0b2"}">${e.amt>0?"+":""}${money(e.amt)}</div>`:""}</div>`;
+  }).join("");
 }
-document.querySelectorAll(".bar2 button").forEach(b=>b.addEventListener("click",()=>{ hap(); go(b.dataset.t); }));
-document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ hap("light"); go(b.dataset.go); }));
-document.querySelectorAll("[data-hap]").forEach(b=>b.addEventListener("click",()=>hap(b.dataset.hap)));
+RENDER.tarix = renderTarix;
+
+/* ================= ishga tushirish ================= */
+paintIcons();
+buildNav(); setHead();
 </script>
 </body>
 </html>
