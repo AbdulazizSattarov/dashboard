@@ -21,6 +21,7 @@
 }
 body[data-t=umumiy]{--acc:#22D68F} body[data-t=zaxira]{--acc:#4A82FF} body[data-t=xodim]{--acc:#FF8A2B}
 body[data-t=kassa]{--acc:#2CC9E0} body[data-t=qarz]{--acc:#9B7BFF} body[data-t=tarix]{--acc:#FF6A5C}
+body[data-t=mening]{--acc:#22D68F} body[data-t=sotuv]{--acc:#2CC9E0}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
 body{font-family:var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;
@@ -34,10 +35,10 @@ svg.i{width:19px;height:19px;flex-shrink:0;fill:none;stroke:currentColor;stroke-
 .amb{position:fixed;left:0;right:0;top:0;height:680px;pointer-events:none;z-index:0;opacity:0;transition:opacity .9s ease}
 .amb.on{opacity:1}
 .amb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,var(--bg) 92%)}
-.amb[data-a=umumiy]{background:radial-gradient(60% 55% at 22% -6%,rgba(46,230,150,.6),transparent 70%),radial-gradient(50% 45% at 88% 2%,rgba(12,120,78,.7),transparent 72%)}
+.amb[data-a=umumiy],.amb[data-a=mening]{background:radial-gradient(60% 55% at 22% -6%,rgba(46,230,150,.6),transparent 70%),radial-gradient(50% 45% at 88% 2%,rgba(12,120,78,.7),transparent 72%)}
 .amb[data-a=zaxira]{background:radial-gradient(60% 55% at 78% -6%,rgba(70,130,255,.62),transparent 70%),radial-gradient(50% 45% at 12% 2%,rgba(20,60,180,.7),transparent 72%)}
 .amb[data-a=xodim]{background:radial-gradient(60% 55% at 22% -6%,rgba(255,140,50,.6),transparent 70%),radial-gradient(50% 45% at 85% 2%,rgba(150,60,10,.7),transparent 72%)}
-.amb[data-a=kassa]{background:radial-gradient(60% 55% at 70% -6%,rgba(44,201,224,.55),transparent 70%),radial-gradient(50% 45% at 15% 2%,rgba(10,90,110,.7),transparent 72%)}
+.amb[data-a=kassa],.amb[data-a=sotuv]{background:radial-gradient(60% 55% at 70% -6%,rgba(44,201,224,.55),transparent 70%),radial-gradient(50% 45% at 15% 2%,rgba(10,90,110,.7),transparent 72%)}
 .amb[data-a=qarz]{background:radial-gradient(60% 55% at 25% -6%,rgba(155,123,255,.58),transparent 70%),radial-gradient(50% 45% at 85% 2%,rgba(70,40,160,.7),transparent 72%)}
 .amb[data-a=tarix]{background:radial-gradient(60% 55% at 75% -6%,rgba(255,106,92,.52),transparent 70%),radial-gradient(50% 45% at 15% 2%,rgba(130,30,30,.65),transparent 72%)}
 
@@ -315,6 +316,46 @@ body.hide .money{filter:blur(8px);user-select:none}
 .sitem{display:flex;align-items:center;gap:14px;width:100%;padding:12px;border-radius:18px;text-align:left;transition:background .2s}
 .sitem:hover{background:rgba(255,255,255,.05)}
 
+/* ---------- xodim ko'rinishi ---------- */
+.face.short{padding-bottom:24px}
+.face.off{background:radial-gradient(110% 85% at 18% -5%,#8a949c 0%,rgba(140,150,160,0) 55%),linear-gradient(172deg,#4b545c 0%,#2c3237 55%,#1a1e22 100%)}
+.big .tm{font-variant-numeric:tabular-nums}
+.mystats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}
+.ms{border-radius:18px;padding:12px 13px;background:rgba(255,255,255,.04);border:1px solid var(--line);min-width:0}
+.ms .l{font-size:11.5px;color:var(--mut)}
+.ms .v{font-size:18px;font-weight:600;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s .money,.ms .money{white-space:nowrap}
+.sbtn{height:34px;padding:0 12px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap;background:rgba(255,255,255,.06);border:1px solid var(--line2);color:var(--mut)}
+.sbtn:hover{color:#fff}
+.sugg{display:flex;flex-direction:column;margin-top:8px}
+.sugg .lbl{font-size:11.5px;color:var(--dim);margin:6px 2px 6px}
+.sg{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;text-align:left;transition:background .2s}
+.sg:hover,.sg:focus-visible{background:rgba(255,255,255,.05)}
+.sg .pr{margin-left:auto;font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pick{display:none;align-items:center;gap:12px;margin-top:14px;padding:14px;border-radius:20px;
+  background:linear-gradient(180deg,rgba(44,201,224,.14),rgba(44,201,224,.05));border:1px solid rgba(44,201,224,.32)}
+.pick.on{display:flex}
+.pick .x{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:var(--mut);background:rgba(255,255,255,.06)}
+.frow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.frow .fl{font-size:14px;color:var(--mut)}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper span{min-width:44px;text-align:center;font-family:var(--mono);font-size:22px;font-weight:600}
+.seg{display:flex;padding:4px;border-radius:16px;background:rgba(0,0,0,.3);border:1px solid var(--line)}
+.seg button{height:38px;padding:0 18px;border-radius:12px;font-size:13.5px;font-weight:600;color:var(--mut);transition:background .25s,color .25s}
+.seg button.on{background:linear-gradient(180deg,#fff,#e4e8e6);color:#0b0f0d}
+.totalrow{display:flex;align-items:baseline;justify-content:space-between;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.totalrow span{font-size:14px;color:var(--mut)}
+.totalrow b{font-size:30px;font-weight:600;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.err{min-height:18px;margin-top:8px;font-size:13px;color:#ff8f84}
+.roleSw{display:none;padding:3px;border-radius:13px;background:rgba(0,0,0,.35);border:1px solid var(--line2)}
+.roleSw.ok{display:flex}
+.roleSw button{height:32px;padding:0 11px;border-radius:10px;font-size:12px;font-weight:600;color:var(--mut)}
+.roleSw button.on{background:#fff;color:#0b0f0d}
+.toast{position:fixed;left:50%;bottom:calc(112px + env(safe-area-inset-bottom,0px));z-index:50;transform:translate(-50%,16px);opacity:0;pointer-events:none;
+  padding:12px 18px;border-radius:18px;font-size:14px;font-weight:600;background:#f2f5f3;color:#0b0f0d;box-shadow:0 14px 34px rgba(0,0,0,.5);
+  transition:opacity .3s,transform .35s cubic-bezier(.16,1,.3,1);max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (min-width:760px){ .toast{bottom:32px} }
 .note{text-align:center;font-size:11px;color:var(--dim);margin:24px 0 6px;line-height:1.6}
 
 /* ================== KENG EKRAN: chap menyu ================== */
@@ -376,6 +417,7 @@ body.hide .money{filter:blur(8px);user-select:none}
 <body data-t="umumiy">
 <div class="amb on" data-a="umumiy"></div><div class="amb" data-a="zaxira"></div><div class="amb" data-a="xodim"></div>
 <div class="amb" data-a="kassa"></div><div class="amb" data-a="qarz"></div><div class="amb" data-a="tarix"></div>
+<div class="amb" data-a="mening"></div><div class="amb" data-a="sotuv"></div>
 
 <div class="app">
   <!-- ===== chap menyu (keng ekran) ===== -->
@@ -385,7 +427,7 @@ body.hide .money{filter:blur(8px);user-select:none}
     <div class="slbl">Bo'limlar</div>
     <div class="snav" id="snav"></div>
     <div class="sfoot">
-      <div class="suser"><div class="av2" id="uIni">Eg</div><div><div class="nm2" id="uName">Egasi</div><div class="rl">Dorixona egasi</div></div></div>
+      <div class="suser"><div class="av2" id="uIni">Eg</div><div><div class="nm2" id="uName">Egasi</div><div class="rl" id="uRole">Dorixona egasi</div></div></div>
     </div>
   </aside>
 
@@ -394,6 +436,7 @@ body.hide .money{filter:blur(8px);user-select:none}
       <div class="hrow">
         <div class="brand"><span class="logo" aria-hidden="true"></span><span>Dorixonam</span></div>
         <div class="tools">
+          <div class="roleSw" id="roleSw" role="group" aria-label="Ko'rinish"><button data-r="egasi">Egasi</button><button data-r="xodim">Xodim</button></div>
           <button class="tb" id="bell" aria-label="Ogohlantirishlar"><i data-ic="bell"></i><span class="dot"></span></button>
           <button class="tb" id="eye" aria-label="Summalarni yashirish"><i data-ic="eye"></i></button>
           <button class="tb fs" id="fs" aria-label="To'liq ekran"><i data-ic="max"></i></button>
@@ -541,6 +584,59 @@ body.hide .money{filter:blur(8px);user-select:none}
       <div class="card"><div class="tl" id="tl"></div></div>
     </section>
 
+    <!-- ===================== XODIM: MENING KUNIM ===================== -->
+    <section class="panel" id="p-mening">
+      <div class="g2">
+        <div class="wallet">
+          <div class="face short" id="shFace">
+            <span class="flabel" id="shLbl">Ish vaqti</span>
+            <div class="big"><span class="tm" id="shTimer">0:00</span></div>
+            <div class="fmeta" id="shMeta"></div>
+          </div>
+          <div class="tx">
+            <div class="txh"><span>Oxirgi sotuvingiz</span><button class="link" data-go="sotuv">Yangi sotuv</button></div>
+            <div class="txr" id="myLast"></div>
+          </div>
+          <div class="acts">
+            <button class="pb glass" data-go="sotuv">Sotuv yozish ↑</button>
+            <button class="pb go" id="shBtn">Ishni tugatish</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Bugungi natijam</h2><div class="sub">Faqat siz yozgan sotuvlar</div>
+          <div class="mystats" id="myStats"></div>
+          <div class="wk" id="myWk"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chead"><div><h2>Bugungi sotuvlarim</h2><div class="sub" id="mySub"></div></div></div>
+        <div class="list" id="myList"></div>
+      </div>
+    </section>
+
+    <!-- ===================== XODIM: SOTUV ===================== -->
+    <section class="panel" id="p-sotuv">
+      <div class="g2 even">
+        <div class="card">
+          <h2>Yangi sotuv</h2><div class="sub">Dori, miqdor va to'lov turini tanlang</div>
+          <label class="search"><i data-ic="search"></i><input id="sq" type="search" placeholder="Dori nomini yozing" autocomplete="off" aria-label="Dori qidirish"></label>
+          <div class="pick" id="pick"></div>
+          <div class="sugg" id="sugg"></div>
+          <div class="frow"><div class="fl">Miqdor</div>
+            <div class="stepper"><button class="mini" id="qm" aria-label="Kamaytirish">−</button><span id="qv">1</span><button class="mini" id="qp" aria-label="Ko'paytirish">+</button></div></div>
+          <div class="frow"><div class="fl">To'lov</div>
+            <div class="seg" id="pay"><button data-p="naqd" class="on">Naqd</button><button data-p="karta">Karta</button></div></div>
+          <div class="totalrow"><span>Jami</span><b id="tot">0 so'm</b></div>
+          <div class="err" id="serr" role="alert"></div>
+          <button class="wbtn" id="saveSale" style="margin-top:6px">Sotuvni yozish</button>
+        </div>
+        <div class="card">
+          <div class="chead"><div><h2>Bugun yozganlarim</h2><div class="sub" id="mySub2"></div></div></div>
+          <div class="list" id="myList2"></div>
+        </div>
+      </div>
+    </section>
+
     <div class="note">Namunaviy ma'lumot bilan ko'rsatilgan dizayn.<br>Haqiqiy ilovada raqamlar botning bazasidan keladi.</div>
   </main>
 </div>
@@ -550,6 +646,7 @@ body.hide .money{filter:blur(8px);user-select:none}
 
 <!-- pastdan chiquvchi oyna -->
 <div class="scrim" id="scrim"></div>
+<div class="toast" id="toast" role="status"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><h3 id="shT"></h3><div id="shB"></div></div>
 
 <script>
@@ -593,6 +690,16 @@ if (tg){
 }
 const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/* ================= rol: egasi yoki xodim =================
+   Bot har bir odamga o'z havolasini beradi: ...?r=egasi yoki ...?r=xodim
+   Eslatma: bu faqat ko'rinishni ajratadi. Haqiqiy ma'lumot ulanganda server
+   Telegram imzosini tekshirib, xodimga faqat uning ma'lumotini beradi. */
+const IN_TG = !!(tg && tg.initData);
+let ROLE = new URLSearchParams(location.search).get("r");
+if (ROLE !== "egasi" && ROLE !== "xodim") ROLE = IN_TG ? "xodim" : "egasi";
+const TGU = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+const ME = { n: (TGU && TGU.first_name) || "Dilnoza" };
+
 /* ================= namunaviy ma'lumot ================= */
 const SALES = 1240000;
 const WEEK  = [0.82,1.05,0.94,1.31,1.12,1.38,1.24];
@@ -608,6 +715,7 @@ const stock = [
   {n:"Sitramon",      d:"P",      q:52, max:70, exp:260},
   {n:"Analgin",       d:"500 mg", q:6,  max:40, exp:410}
 ];
+[18000,5000,3500,12000,30000,18000,9000,15000,4000,6000].forEach((p,i)=>{ if (stock[i]) stock[i].p = p; });
 const COMB_N = 5;
 const staff = [
   {n:"Dilnoza", s:12.3, c:145, t:"08:54", col:"#9FE7C4", on:true},
@@ -670,7 +778,7 @@ function grow(sel, prop){
 }
 
 /* ================= bo'limlar ================= */
-const TABS = [
+const TABS_E = [
   {id:"umumiy", nm:"Umumiy",   ic:"home",  eb:"Umumiy ko'rinish"},
   {id:"zaxira", nm:"Zaxira",   ic:"hex",   eb:"Zaxira va muddatlar", h:"Qaysi dorini tekshiramiz?"},
   {id:"xodim",  nm:"Xodimlar", ic:"users", eb:"Xodimlar va davomat", h:"Bu hafta kim yetakchi?"},
@@ -678,13 +786,19 @@ const TABS = [
   {id:"qarz",   nm:"Qarzlar",  ic:"qarz",  eb:"Yetkazib beruvchilar",h:"Kimga qancha qarzmiz?"},
   {id:"tarix",  nm:"Tarix",    ic:"tarix", eb:"Bugungi voqealar",    h:"Bugun nima bo'ldi?"}
 ];
-const MOBILE = ["umumiy","zaxira","xodim","kassa"];
+const TABS_X = [
+  {id:"mening", nm:"Mening kunim", ic:"home",  eb:"Ish joyim", h:"Xayrli ish kuni, "+ME.n+"."},
+  {id:"sotuv",  nm:"Sotuv",        ic:"cart",  eb:"Yangi sotuv", h:"Nima sotdingiz?"},
+  {id:"zaxira", nm:"Zaxira",       ic:"hex",   eb:"Zaxira va narxlar", h:"Qaysi dori kerak?"}
+];
+let TABS = TABS_E, MOBILE = ["umumiy","zaxira","xodim","kassa"];
 let cur = "umumiy";
 const low = stock.filter(x=>x.q<10), soon = stock.filter(x=>x.exp<=60);
 const attnN = new Set([...low,...soon]).size;
-TABS[0].h = attnN ? attnN + " ta dori e'tiboringizni kutmoqda." : "Bugun tinch, hammasi joyida.";
+TABS_E[0].h = attnN ? attnN + " ta dori e'tiboringizni kutmoqda." : "Bugun tinch, hammasi joyida.";
 
 function badge(id){
+  if (ROLE==="xodim") return id==="zaxira" ? low.length : 0;
   if (id==="kassa") return requests.filter(r=>r.st==="wait").length;
   if (id==="zaxira") return low.length;
   if (id==="qarz") return sups.filter(s=>s.due<0 && s.paid<s.total).length;
@@ -698,13 +812,13 @@ function buildNav(){
   const mob = MOBILE.map(id=>TABS.find(t=>t.id===id));
   const moreOn = !MOBILE.includes(cur);
   document.getElementById("bnav").innerHTML = mob.map(t=>`<button data-t="${t.id}" class="${t.id===cur?"on":""}">${svg(t.ic,20)}${t.nm}</button>`).join("")
-    + `<button id="moreBtn" class="${moreOn?"on":""}">${svg("more",20)}Yana</button>`;
+    + (ROLE==="egasi" ? `<button id="moreBtn" class="${moreOn?"on":""}">${svg("more",20)}Yana</button>` : "");
   document.querySelectorAll("#snav button,#bnav button[data-t]").forEach(b=>b.onclick=()=>{ hap(); go(b.dataset.t); });
-  document.getElementById("moreBtn").onclick = ()=>{ hap(); openSheet("Yana", ["qarz","tarix"].map(id=>{
+  if (ROLE==="egasi") document.getElementById("moreBtn").onclick = ()=>{ hap(); openSheet("Yana", ["qarz","tarix"].map(id=>{
     const t = TABS.find(x=>x.id===id); return {ic:t.ic, cls:id==="qarz"?"v":"r", t:t.nm, s:t.eb, go:id};
   })); };
   document.getElementById("steps").innerHTML = TABS.map(t=>`<i class="${t.id===cur?"on":""}"></i>`).join("");
-  const n = attnN + badge("kassa");
+  const n = ROLE==="egasi" ? attnN + badge("kassa") : low.length + mySales.filter(s=>s.st==="ok"||s.st==="no").length;
   document.getElementById("bell").classList.toggle("has", n>0);
 }
 function setHead(){
@@ -728,7 +842,7 @@ function openSheet(title, items){
   document.getElementById("shT").textContent = title;
   document.getElementById("shB").innerHTML = items.map((it,i)=>
     `<button class="sitem" data-i="${i}"><div class="ico ${it.cls}">${svg(it.ic)}</div><div class="gr"><div class="n">${it.t}</div><div class="s">${it.s}</div></div></button>`).join("");
-  document.querySelectorAll("#shB .sitem").forEach(b=>b.onclick=()=>{ hap(); go(items[+b.dataset.i].go); });
+  document.querySelectorAll("#shB .sitem").forEach(b=>b.onclick=()=>{ hap(); const it = items[+b.dataset.i]; if (it.fn){ closeSheet(); it.fn(); } else go(it.go); });
   scrim.classList.add("on"); sheet.classList.add("on");
 }
 function closeSheet(){ scrim.classList.remove("on"); sheet.classList.remove("on"); }
@@ -741,14 +855,29 @@ eye.onclick = ()=>{
   hap("light"); const h = document.body.classList.toggle("hide");
   eye.innerHTML = svg(h?"eyeoff":"eye"); eye.setAttribute("aria-label", h?"Summalarni ko'rsatish":"Summalarni yashirish");
 };
-function bellAction(){ hap("light"); openSheet("Ogohlantirishlar", [
+function bellAction(){ hap("light");
+  if (ROLE==="xodim"){
+    const it = [
+      ...mySales.filter(s=>s.st==="ok"||s.st==="no").map(s=>({ic:"undo", cls:s.st==="ok"?"g":"r", t:`#${s.id} so'rovi ${s.st==="ok"?"tasdiqlandi":"rad etildi"}`, s:`${s.n} × ${s.q}`, go:"mening"})),
+      ...low.map(x=>({ic:"warn", cls:"r", t:`${x.n} ${x.d} kam qoldi`, s:`${x.q} dona · egasi xabardor`, go:"zaxira"}))
+    ];
+    openSheet("Bildirishnomalar", it.length ? it : [{ic:"check", cls:"g", t:"Yangi xabar yo'q", s:"Hammasi joyida", go:"mening"}]);
+    return;
+  }
+  openSheet("Ogohlantirishlar", [
   ...low.map(x=>({ic:"warn", cls:"r", t:`${x.n} ${x.d}`, s:`${x.q} dona qoldi`, go:"zaxira"})),
   ...requests.filter(r=>r.st==="wait").map(r=>({ic:"undo", cls:"y", t:`${r.who}: bekor qilish so'rovi`, s:r.item, go:"kassa"})),
   ...sups.filter(s=>s.due<0 && s.paid<s.total).map(s=>({ic:"qarz", cls:"v", t:`${s.n} to'lovi kechikdi`, s:`${-s.due} kun o'tdi`, go:"qarz"}))
 ]); }
 document.getElementById("bell").onclick = bellAction;
 document.querySelectorAll("[data-bell]").forEach(b=>b.onclick = bellAction);
-document.getElementById("plus").onclick = ()=>{ hap("light"); openSheet("Tezkor amallar", [
+document.getElementById("plus").onclick = ()=>{ hap("light");
+  if (ROLE==="xodim"){ openSheet("Tezkor amallar", [
+    {ic:"cart",  cls:"g", t:"Sotuv yozish", s:"Dori, miqdor va to'lov turi", go:"sotuv"},
+    {ic:"login", cls:"b", t:shift.on?"Ishni tugatish":"Ishni boshlash", s:"Davomat uchun", fn:toggleShift},
+    {ic:"hex",   cls:"v", t:"Dori narxini ko'rish", s:"Zaxira va narxlar", go:"zaxira"}
+  ]); return; }
+  openSheet("Tezkor amallar", [
   {ic:"kassa", cls:"b", t:"Kassani tekshirish", s:"Naqd pulni sanab, tizim bilan solishtiring", go:"kassa"},
   {ic:"cart",  cls:"g", t:"Buyurtma ro'yxati", s:"Kam qolgan dorilarni belgilang", go:"zaxira"},
   {ic:"qarz",  cls:"v", t:"Qarz to'lovini kiritish", s:"Yetkazib beruvchiga to'langan summa", go:"qarz"}
@@ -881,16 +1010,19 @@ function renderDetail(){
     <div class="bar"><b data-w="${pct}" id="dbar" style="background:linear-gradient(90deg,${STC[st]}cc,${STC[st]})"></b></div>
     <div class="facts">
       <div class="fact"><div class="l">Muddati</div><div class="v">${x.exp} kun</div></div>
-      <div class="fact"><div class="l">Tavsiya buyurtma</div><div class="v">${need} dona</div></div>
+      ${ROLE==="egasi" ? `<div class="fact"><div class="l">Tavsiya buyurtma</div><div class="v">${need} dona</div></div>`
+        : `<div class="fact"><div class="l">Narxi</div><div class="v">${money(x.p)} so'm</div></div>`}
     </div>
-    <button class="wbtn${on?" done":""}" id="addBtn">${on?"Buyurtma ro'yxatida ✓":"Buyurtma ro'yxatiga qo'shish"}</button>`;
+    ${ROLE==="egasi" ? `<button class="wbtn${on?" done":""}" id="addBtn">${on?"Buyurtma ro'yxatida ✓":"Buyurtma ro'yxatiga qo'shish"}</button>`
+      : `<button class="wbtn" id="sellBtn"${x.q<1?" disabled style=\"opacity:.5\"":""}>${x.q<1?"Zaxirada qolmagan":"Shu dorini sotish"}</button>`}`;
   grow("#dbar","width");
-  document.getElementById("addBtn").onclick = ()=>{ ordered.has(selStock)?ordered.delete(selStock):ordered.add(selStock); hap("medium"); renderDetail(); renderList(); };
+  if (ROLE==="egasi") document.getElementById("addBtn").onclick = ()=>{ ordered.has(selStock)?ordered.delete(selStock):ordered.add(selStock); hap("medium"); renderDetail(); renderList(); };
+  else document.getElementById("sellBtn").onclick = ()=>{ if (stock[selStock].q<1) return; hap("light"); pickProduct(selStock); go("sotuv"); };
 }
 function renderList(){
   const q = document.getElementById("q").value.trim().toLowerCase();
   const rows = stock.map((x,i)=>({x,i})).filter(({x})=>(x.n+" "+x.d).toLowerCase().includes(q)).sort((a,b)=>a.x.q/a.x.max - b.x.q/b.x.max);
-  document.getElementById("stockSub").textContent = `${stock.length} ta dori · ${ordered.size} tasi buyurtma ro'yxatida`;
+  document.getElementById("stockSub").textContent = ROLE==="egasi" ? `${stock.length} ta dori · ${ordered.size} tasi buyurtma ro'yxatida` : `${stock.length} ta dori · narxi va qoldig'i`;
   document.getElementById("slist").innerHTML = rows.length ? rows.map(({x,i})=>{
     const st = status(x), pct = Math.min(100, Math.round(x.q/x.max*100));
     return `<div class="row srow${i===selStock?" sel":""}" data-i="${i}">
@@ -1043,9 +1175,157 @@ function renderTarix(){
 }
 RENDER.tarix = renderTarix;
 
+/* ================= XODIM: mening kunim ================= */
+let lastId = 31;
+let mySales = [
+  {id:31, t:"10:42", n:"Parasetamol 500 mg", q:5, sum:25000, pay:"naqd",  st:null},
+  {id:27, t:"10:05", n:"Vitamin C 500 mg",   q:1, sum:30000, pay:"karta", st:null},
+  {id:22, t:"09:31", n:"Sitramon P",         q:2, sum:8000,  pay:"naqd",  st:"wait", why:"Mijoz qaytardi"},
+  {id:18, t:"09:02", n:"Ibuprofen 400 mg",   q:1, sum:18000, pay:"karta", st:null}
+];
+const MYWEEK = [0.31,0.42,0.38,0.52,0.47,0.55];
+const shift = {on:true, start:"08:54", end:null};
+const nowHM = () => { const d = new Date(); return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); };
+const hm2min = s => +s.slice(0,2)*60 + +s.slice(3,5);
+const dur = m => Math.floor(m/60)+":"+String(m%60).padStart(2,"0");
+const counted = () => mySales.filter(s=>s.st!=="ok");
+
+const toastEl = document.getElementById("toast"); let toastT;
+function toast(msg){ toastEl.textContent = msg; toastEl.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(()=>toastEl.classList.remove("on"), 2600); }
+
+function renderShift(){
+  const face = document.getElementById("shFace");
+  const nowM = hm2min(nowHM()), sM = hm2min(shift.start);
+  const late = sM > 9*60 ? sM - 9*60 : 0;
+  face.classList.toggle("off", !shift.on);
+  document.getElementById("shLbl").textContent = shift.on ? "Ishdasiz" : "Ish tugadi";
+  const m = shift.on ? Math.max(0, nowM - sM) : Math.max(0, hm2min(shift.end) - sM);
+  document.getElementById("shTimer").textContent = dur(m);
+  document.getElementById("shMeta").innerHTML = shift.on
+    ? `<b>${shift.start}</b> da boshlandi` + (late ? ` · ${late} daqiqa kechikdingiz` : " · o'z vaqtida")
+    : `<b>${shift.start}</b> — <b>${shift.end}</b> · ${Math.floor(m/60)} soat ${m%60} daqiqa`;
+  const b = document.getElementById("shBtn");
+  b.textContent = shift.on ? "Ishni tugatish" : "Ishni boshlash";
+}
+function toggleShift(){
+  if (shift.on){ shift.on = false; shift.end = nowHM(); hap("medium"); toast("Ish tugadi: " + shift.end); }
+  else { shift.on = true; shift.start = nowHM(); shift.end = null; hap("medium"); toast("Ish boshlandi: " + shift.start); }
+  renderShift(); buildNav();
+}
+document.getElementById("shBtn").onclick = toggleShift;
+setInterval(()=>{ if (cur==="mening" && shift.on) renderShift(); }, 30000);
+
+function saleRow(s){
+  const tag = s.st==="wait" ? `<span class="tag y">Kutilmoqda</span>`
+    : s.st==="ok" ? `<span class="tag r">Bekor qilindi</span>`
+    : s.st==="no" ? `<span class="tag g">Rad etildi</span>`
+    : `<button class="sbtn" data-cancel="${s.id}">Bekor so'rash</button>`;
+  return `<div class="row"><div class="ico ${s.pay==="karta"?"b":"g"}">${svg(s.pay==="karta"?"kassa":"cart")}</div>
+    <div class="gr"><div class="n">${s.n} × ${s.q}</div><div class="s">#${s.id} · ${s.t} · ${s.pay==="karta"?"karta":"naqd"} · <span class="money">${money(s.sum)} so'm</span></div></div>${tag}</div>`;
+}
+function renderMyLists(){
+  const c = counted(), sum = c.reduce((a,s)=>a+s.sum,0);
+  const sub = c.length ? `${c.length} ta sotuv · ${money(sum)} so'm` : "Hali sotuv yo'q";
+  ["myList","myList2"].forEach(id=>{
+    document.getElementById(id).innerHTML = mySales.length ? mySales.map(saleRow).join("") : `<div class="empty">Bugun hali sotuv yozmadingiz</div>`;
+  });
+  document.getElementById("mySub").textContent = sub;
+  document.getElementById("mySub2").textContent = sub;
+  document.querySelectorAll("[data-cancel]").forEach(b=>b.onclick=()=>{
+    const s = mySales.find(x=>x.id===+b.dataset.cancel); hap();
+    openSheet(`#${s.id} ni bekor qilish`, ["Xato yozildi","Mijoz qaytardi","Miqdor noto'g'ri"].map(w=>({ic:"undo", cls:"y", t:w, s:"So'rov egasiga yuboriladi", fn:()=>{
+      s.st = "wait"; s.why = w; renderMyLists(); toast("So'rov egasiga yuborildi");
+    }})));
+  });
+  const last = mySales.find(s=>s.st!=="ok");
+  document.getElementById("myLast").innerHTML = last
+    ? `<div class="pillic" aria-hidden="true">${svg("pill")}</div><div><div class="txn">${last.n}</div><div class="txs">${last.q} dona · ${last.t}</div></div><div class="txa money">${money(last.sum)}</div>`
+    : `<div class="txs">Hali sotuv yo'q</div>`;
+}
+function renderMening(){
+  renderShift(); renderMyLists();
+  const c = counted(), sum = c.reduce((a,s)=>a+s.sum,0), avg = c.length ? Math.round(sum/c.length) : 0;
+  document.getElementById("myStats").innerHTML = [
+    ["Sotuv", money(sum)], ["Cheklar", c.length], ["O'rtacha chek", money(avg)]
+  ].map(([l,v])=>`<div class="ms"><div class="l">${l}</div><div class="v money">${v}</div></div>`).join("");
+  const wk = [...MYWEEK, sum/1e6], mx = Math.max(...wk);
+  document.getElementById("myWk").innerHTML = wk.map((v,i)=>{
+    const d = dayAdd(i-6), now = i===6;
+    return `<div class="c${now?" now":""}"><div class="v money">${dec(v,2)}</div><div class="b" data-w="${Math.max(4,Math.round(v/mx*100))}"></div><div class="dl">${now?"Bugun":KQ[d.getDay()]}</div></div>`;
+  }).join("");
+  setTimeout(()=>grow("#myWk .b","height"), 120);
+}
+RENDER.mening = renderMening;
+
+/* ================= XODIM: sotuv formasi ================= */
+let pickIdx = -1, qty = 1, pay = "naqd";
+const sq = document.getElementById("sq");
+function pickProduct(i){
+  pickIdx = i; qty = 1; sq.value = "";
+  document.getElementById("serr").textContent = "";
+  renderSaleForm();
+}
+function renderSaleForm(){
+  const pick = document.getElementById("pick"), sugg = document.getElementById("sugg");
+  if (pickIdx >= 0){
+    const x = stock[pickIdx];
+    pick.classList.add("on");
+    pick.innerHTML = `<div class="ico b">${svg("pill")}</div><div class="gr"><div class="n">${x.n} ${x.d}</div>
+      <div class="s">Zaxirada ${x.q} dona · narxi ${money(x.p)} so'm</div></div><button class="x" id="unpick" aria-label="Boshqa dori tanlash">${svg("x",16)}</button>`;
+    document.getElementById("unpick").onclick = ()=>{ pickIdx = -1; renderSaleForm(); sq.focus(); };
+  } else pick.classList.remove("on");
+
+  const q = sq.value.trim().toLowerCase();
+  let list, lbl;
+  if (q){ list = stock.map((x,i)=>({x,i})).filter(({x})=>(x.n+" "+x.d).toLowerCase().includes(q)).slice(0,6); lbl = list.length ? "" : `"${sq.value}" topilmadi`; }
+  else if (pickIdx < 0){ list = [1,8,4,5,3].map(i=>({x:stock[i],i})); lbl = "Ko'p sotiladiganlar"; }
+  else { list = []; lbl = ""; }
+  sugg.innerHTML = (lbl?`<div class="lbl">${lbl}</div>`:"") + list.map(({x,i})=>
+    `<button class="sg" data-i="${i}"><div class="gr"><div class="n">${x.n} ${x.d}</div><div class="s">${x.q} dona qoldi</div></div><div class="pr">${money(x.p)}</div></button>`).join("");
+  sugg.querySelectorAll(".sg").forEach(b=>b.onclick=()=>{ hap(); pickProduct(+b.dataset.i); });
+
+  document.getElementById("qv").textContent = qty;
+  document.querySelectorAll("#pay button").forEach(b=>b.classList.toggle("on", b.dataset.p===pay));
+  document.getElementById("tot").textContent = pickIdx>=0 ? money(stock[pickIdx].p*qty)+" so'm" : "0 so'm";
+}
+sq.addEventListener("input", ()=>{ document.getElementById("serr").textContent=""; renderSaleForm(); });
+document.getElementById("qm").onclick = ()=>{ if (qty>1){ qty--; hap(); renderSaleForm(); } };
+document.getElementById("qp").onclick = ()=>{ if (qty<99){ qty++; hap(); renderSaleForm(); } };
+document.querySelectorAll("#pay button").forEach(b=>b.onclick=()=>{ pay = b.dataset.p; hap(); renderSaleForm(); });
+document.getElementById("saveSale").onclick = ()=>{
+  const err = document.getElementById("serr");
+  if (pickIdx < 0){ err.textContent = "Avval dorini tanlang"; sq.focus(); return; }
+  const x = stock[pickIdx];
+  if (qty > x.q){ err.textContent = `Zaxirada faqat ${x.q} dona bor`; return; }
+  err.textContent = "";
+  x.q -= qty;
+  const s = {id:++lastId, t:nowHM(), n:`${x.n} ${x.d}`, q:qty, sum:x.p*qty, pay, st:null};
+  mySales.unshift(s);
+  hap("medium"); toast(`Yozildi: #${s.id} · ${money(s.sum)} so'm`);
+  pickIdx = -1; qty = 1; pay = "naqd"; renderSaleForm(); renderMyLists(); buildNav();
+};
+RENDER.sotuv = ()=>{ renderSaleForm(); renderMyLists(); };
+
+/* ================= rolni qo'llash ================= */
+function applyRole(r){
+  ROLE = r;
+  TABS = r==="egasi" ? TABS_E : TABS_X;
+  MOBILE = r==="egasi" ? ["umumiy","zaxira","xodim","kassa"] : ["mening","sotuv","zaxira"];
+  document.getElementById("uRole").textContent = r==="egasi" ? "Dorixona egasi" : "Xodim";
+  const nm = r==="egasi" ? ((TGU && TGU.first_name) || "Egasi") : ME.n;
+  document.getElementById("uName").textContent = nm;
+  document.getElementById("uIni").textContent = nm.slice(0,2);
+  document.querySelectorAll("#roleSw button").forEach(b=>b.classList.toggle("on", b.dataset.r===r));
+  go(TABS[0].id);
+}
+if (!IN_TG){
+  const sw = document.getElementById("roleSw"); sw.classList.add("ok");
+  sw.querySelectorAll("button").forEach(b=>b.onclick=()=>{ if (b.dataset.r!==ROLE){ hap(); applyRole(b.dataset.r); } });
+}
+
 /* ================= ishga tushirish ================= */
 paintIcons();
-buildNav(); setHead();
+applyRole(ROLE);
 </script>
 </body>
 </html>
