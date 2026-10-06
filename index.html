@@ -457,13 +457,13 @@ body.hide .money{filter:blur(8px);user-select:none}
           <div class="face">
             <span class="flabel">Bugungi sotuv</span>
             <div class="big money"><span id="heroNum">0</span><small>so'm</small></div>
-            <div class="fmeta"><b>↑ 18%</b> kechagidan · <b>47</b> ta chek</div>
+            <div class="fmeta" id="heroMeta"><b>↑ 18%</b> kechagidan · <b>47</b> ta chek</div>
           </div>
           <div class="avs" id="avs"></div>
           <div class="shift" id="shift"></div>
           <div class="tx">
             <div class="txh"><span>Oxirgi sotuv</span><button class="link" data-go="tarix">Hammasi</button></div>
-            <div class="txr">
+            <div class="txr" id="lastTx">
               <div class="pillic" aria-hidden="true"><i data-ic="pill"></i></div>
               <div><div class="txn">Parasetamol 500 mg</div><div class="txs">Dilnoza · 10:42</div></div>
               <div class="txa money">25 000</div>
@@ -637,7 +637,7 @@ body.hide .money{filter:blur(8px);user-select:none}
       </div>
     </section>
 
-    <div class="note">Namunaviy ma'lumot bilan ko'rsatilgan dizayn.<br>Haqiqiy ilovada raqamlar botning bazasidan keladi.</div>
+    <div class="note" id="note">Namunaviy ma'lumot bilan ko'rsatilgan dizayn.<br>Haqiqiy ilovada raqamlar botning bazasidan keladi.</div>
   </main>
 </div>
 
@@ -700,10 +700,54 @@ if (ROLE !== "egasi" && ROLE !== "xodim") ROLE = IN_TG ? "xodim" : "egasi";
 const TGU = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
 const ME = { n: (TGU && TGU.first_name) || "Dilnoza" };
 
+/* ================= jonli rejim =================
+   Ilova bot serveridan ochilganda (window.DORIXONAM_LIVE) ma'lumot /api/boot dan keladi,
+   har bir so'rov Telegram imzosi (initData) bilan yuboriladi, server uni tekshiradi.
+   GitHub Pages'da esa namunaviy ma'lumot bilan demo ko'rinadi. */
+const LIVE = !!window.DORIXONAM_LIVE && IN_TG;
+let BOOT = null;
+const LOADED_AT = Date.now();
+async function api(path, body){
+  const r = await fetch("api/" + path, {
+    method: body ? "POST" : "GET",
+    headers: {"Content-Type":"application/json", "X-Init-Data": (tg && tg.initData) || ""},
+    body: body ? JSON.stringify(body) : undefined, cache: "no-store"
+  });
+  let j = {}; try { j = await r.json(); } catch(e){}
+  if (!r.ok) { const e = new Error(j.error || ("Server xatosi " + r.status)); e.status = r.status; throw e; }
+  return j;
+}
+function bootScreen(html){
+  let el = document.getElementById("bootScr");
+  if (!el){ el = document.createElement("div"); el.id = "bootScr";
+    el.style.cssText = "position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;text-align:center;padding:32px;background:#060807;color:#fff;font:15px/1.5 Geist,system-ui,sans-serif";
+    document.body.appendChild(el); }
+  el.innerHTML = html; el.style.display = html ? "flex" : "none";
+}
+async function loadBoot(){
+  bootScreen('<div style="opacity:.6">Yuklanmoqda…</div>');
+  try {
+    BOOT = await api("boot");
+    ROLE = BOOT.role; ME.n = BOOT.me.name || ME.n;
+    bootScreen("");
+    return true;
+  } catch(e){
+    if (e.status === 403) bootScreen('<div><div style="font-size:22px;margin-bottom:10px">Siz ro\'yxatda emassiz</div><div style="opacity:.65">Dorixona egasidan taklif havolasini so\'rang va bot orqali kiring.</div></div>');
+    else bootScreen('<div><div style="font-size:20px;margin-bottom:10px">Ulanib bo\'lmadi</div><div style="opacity:.65;margin-bottom:18px">' + (e.message||"") + '</div><button onclick="location.reload()" style="height:44px;padding:0 22px;border-radius:14px;background:#fff;color:#000;font-weight:600">Qayta urinish</button></div>');
+    return false;
+  }
+}
+if (LIVE) document.addEventListener("visibilitychange", ()=>{ if (!document.hidden && Date.now() - LOADED_AT > 60000) location.reload(); });
+
+function MAIN(){
+const TODAY0 = new Date(); TODAY0.setHours(0,0,0,0);
+const LV = !!BOOT, BE = BOOT && BOOT.role === "egasi" ? BOOT : null, BX = BOOT && BOOT.role === "xodim" ? BOOT : null;
+function splitName(s){ const m = String(s).match(/^(.*?\D)\s+(\d.*)$/); return m ? [m[1].trim(), m[2].trim()] : [String(s), ""]; }
+
 /* ================= namunaviy ma'lumot ================= */
-const SALES = 1240000;
-const WEEK  = [0.82,1.05,0.94,1.31,1.12,1.38,1.24];
-const stock = [
+const SALES = LV ? (BE ? BE.sales.today : 0) : 1240000;
+const WEEK  = LV ? (BE ? BE.sales.week : [0,0,0,0,0,0,0]) : [0.82,1.05,0.94,1.31,1.12,1.38,1.24];
+const stock = LV ? BOOT.stock.map(x=>{ const [n,d] = splitName(x.name); return {id:x.id, n, d, q:x.q, max:x.max, min:x.min, exp:x.exp, p:x.p}; }) : [
   {n:"Amoksitsillin", d:"500 mg", q:4,  max:30, exp:5},
   {n:"Parasetamol",   d:"500 mg", q:23, max:60, exp:149},
   {n:"Parasetamol",   d:"250 mg", q:8,  max:40, exp:104},
@@ -715,28 +759,29 @@ const stock = [
   {n:"Sitramon",      d:"P",      q:52, max:70, exp:260},
   {n:"Analgin",       d:"500 mg", q:6,  max:40, exp:410}
 ];
-[18000,5000,3500,12000,30000,18000,9000,15000,4000,6000].forEach((p,i)=>{ if (stock[i]) stock[i].p = p; });
+if (!LV) [18000,5000,3500,12000,30000,18000,9000,15000,4000,6000].forEach((p,i)=>{ if (stock[i]) stock[i].p = p; });
 const COMB_N = 5;
-const staff = [
+const staff = LV ? (BE ? BE.staff : []) : [
   {n:"Dilnoza", s:12.3, c:145, t:"08:54", col:"#9FE7C4", on:true},
   {n:"Nilufar", s:9.2,  c:118, t:"09:01", col:"#F6B3C8", on:true},
   {n:"Aziz",    s:8.1,  c:98,  t:"09:17", col:"#F7C9A0", on:true},
   {n:"Jasur",   s:6.7,  c:84,  t:null,    col:"#B4C8FF", on:false},
   {n:"Madina",  s:5.4,  c:71,  t:"08:48", col:"#D9BDFC", on:true}
 ];
-const KASSA = {cash:820000, card:420000};
-let requests = [
+const KASSA = LV ? (BE ? {cash:BE.kassa.cash, card:BE.kassa.card, cancelled:BE.kassa.cancelled} : {cash:0, card:0, cancelled:0}) : {cash:820000, card:420000};
+const daysAgo = s => Math.round((TODAY0 - new Date(s+"T00:00:00"))/864e5);
+let requests = LV ? (BE ? BE.requests.map(r=>({id:r.id, sale:r.sale, who:r.who||"?", item:r.item, sum:r.sum, why:r.why||"sabab yo'q", time:r.time, st:r.st})) : []) : [
   {id:15, who:"Nilufar", item:"Vitamin C 500 mg × 1", sum:30000, why:"Xato yozildi", time:"11:02", st:"wait"},
   {id:12, who:"Aziz",    item:"Aspirin 100 mg × 2",   sum:24000, why:"Mijoz qaytardi", time:"10:15", st:"wait"}
 ];
-const KHIST = [{d:1,diff:0,who:"Dilnoza"},{d:2,diff:-20000,who:"Aziz"},{d:3,diff:0,who:"Madina"},{d:4,diff:0,who:"Nilufar"},{d:5,diff:-45000,who:"Aziz"}];
-const sups = [
+const KHIST = LV ? (BE ? BE.khist.map(h=>({d:daysAgo(h.sana), diff:h.diff, who:h.who})) : []) : [{d:1,diff:0,who:"Dilnoza"},{d:2,diff:-20000,who:"Aziz"},{d:3,diff:0,who:"Madina"},{d:4,diff:0,who:"Nilufar"},{d:5,diff:-45000,who:"Aziz"}];
+const sups = LV ? (BE ? BE.sups : []) : [
   {n:"Fayz-Farm",        total:5000000, paid:2000000, due:5},
   {n:"Grand Pharm",      total:3400000, paid:2900000, due:-2},
   {n:"Dori-Darmon MChJ", total:1200000, paid:0,       due:12},
   {n:"Meros Farm",       total:800000,  paid:800000,  due:0}
 ];
-const EVENTS = [
+const EVENTS = LV ? (BE ? BE.events : []) : [
   {t:"11:02", k:"bekor", txt:"Nilufar bekor qilishni so'radi", sub:"Vitamin C 500 mg × 1 · xato yozildi", amt:-30000, flag:true},
   {t:"10:42", k:"sotuv", txt:"Parasetamol 500 mg × 5", sub:"Dilnoza", amt:25000},
   {t:"10:15", k:"bekor", txt:"Aziz bekor qilishni so'radi", sub:"Aspirin 100 mg × 2 · mijoz qaytardi", amt:-24000, flag:true},
@@ -751,6 +796,11 @@ const EVENTS = [
 ];
 
 /* ================= yordamchilar ================= */
+/* kirill/lotin farqisiz qidiruv (serverdagi kalit() bilan bir xil) */
+const KIR = {"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"yo","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"x","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"i","ь":"","э":"e","ю":"yu","я":"ya","ў":"o","қ":"q","ғ":"g","ҳ":"h"};
+const kal = t => { let s = [...String(t||"").toLowerCase()].map(c=>KIR[c]!=null?KIR[c]:c).join("").replace(/[ʻʼ'‘’`]/g,"").replace(/[^a-z0-9]+/g,"");
+  [["ts","s"],["kh","h"],["x","h"],["c","s"],["y","i"],["w","v"],["q","k"]].forEach(([a,b])=>{ s = s.split(a).join(b); }); return s; };
+const esc = t => String(t==null?"":t).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const money = n => (n<0?"−":"") + Math.round(Math.abs(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
 const dec = (n,d=2) => n.toFixed(d).replace(".",",");
 const mln = n => dec(n/1e6, n>=1e7?1:2);
@@ -760,7 +810,9 @@ const KUN = ["yakshanba","dushanba","seshanba","chorshanba","payshanba","juma","
 const KQ = ["Ya","Du","Se","Ch","Pa","Ju","Sh"];
 const dayAdd = n => { const d = new Date(TODAY); d.setDate(d.getDate()+n); return d; };
 const fmtD = d => d.getDate()+" "+OY[d.getMonth()];
-const status = x => x.q < 10 ? "low" : x.q < 25 ? "mid" : "ok";
+const MINQ = x => (x.min != null ? x.min : 10);
+const status = x => x.q < MINQ(x) ? "low" : x.q < MINQ(x)*2.5 ? "mid" : "ok";
+const expTxt = x => x.exp == null ? "—" : x.exp < 0 ? "o'tgan" : x.exp + " kun";
 const STC = {low:"#FF6A5C", mid:"#F4B445", ok:"#22D68F"};
 const STL = {low:"Kam qoldi", mid:"O'rtacha", ok:"Yetarli"};
 const STT = {low:"r", mid:"y", ok:"g"};
@@ -793,7 +845,7 @@ const TABS_X = [
 ];
 let TABS = TABS_E, MOBILE = ["umumiy","zaxira","xodim","kassa"];
 let cur = "umumiy";
-const low = stock.filter(x=>x.q<10), soon = stock.filter(x=>x.exp<=60);
+const low = stock.filter(x=>x.q<MINQ(x)), soon = stock.filter(x=>x.exp!=null && x.exp<=60);
 const attnN = new Set([...low,...soon]).size;
 TABS_E[0].h = attnN ? attnN + " ta dori e'tiboringizni kutmoqda." : "Bugun tinch, hammasi joyida.";
 
@@ -801,7 +853,7 @@ function badge(id){
   if (ROLE==="xodim") return id==="zaxira" ? low.length : 0;
   if (id==="kassa") return requests.filter(r=>r.st==="wait").length;
   if (id==="zaxira") return low.length;
-  if (id==="qarz") return sups.filter(s=>s.due<0 && s.paid<s.total).length;
+  if (id==="qarz") return sups.filter(s=>s.due!=null && s.due<0 && s.paid<s.total).length;
   return 0;
 }
 function buildNav(){
@@ -867,7 +919,7 @@ function bellAction(){ hap("light");
   openSheet("Ogohlantirishlar", [
   ...low.map(x=>({ic:"warn", cls:"r", t:`${x.n} ${x.d}`, s:`${x.q} dona qoldi`, go:"zaxira"})),
   ...requests.filter(r=>r.st==="wait").map(r=>({ic:"undo", cls:"y", t:`${r.who}: bekor qilish so'rovi`, s:r.item, go:"kassa"})),
-  ...sups.filter(s=>s.due<0 && s.paid<s.total).map(s=>({ic:"qarz", cls:"v", t:`${s.n} to'lovi kechikdi`, s:`${-s.due} kun o'tdi`, go:"qarz"}))
+  ...sups.filter(s=>s.due!=null && s.due<0 && s.paid<s.total).map(s=>({ic:"qarz", cls:"v", t:`${s.n} to'lovi kechikdi`, s:`${-s.due} kun o'tdi`, go:"qarz"}))
 ]); }
 document.getElementById("bell").onclick = bellAction;
 document.querySelectorAll("[data-bell]").forEach(b=>b.onclick = bellAction);
@@ -895,26 +947,41 @@ countUp(document.getElementById("heroNum"), SALES, 1300, money);
   const box = document.getElementById("avs");
   box.innerHTML = staff.map(p=>`<div class="av${p.on?"":" off"}" style="background:radial-gradient(circle at 35% 25%,#fff,${p.col} 55%)" title="${p.n}">${p.n.slice(0,2)}</div>`).join("");
   const onN = staff.filter(p=>p.on).length;
-  document.getElementById("shift").textContent = `Smenada ${onN} kishi · ${staff.length-onN} kishi kelmadi`;
+  document.getElementById("shift").textContent = staff.length ? `Smenada ${onN} kishi · ${staff.length-onN} kishi kelmadi` : (LV ? "Xodim hali qo'shilmagan · botda /taklif" : "");
   box.querySelectorAll(".av").forEach((a,i)=>{ if (RM) a.classList.add("in"); else setTimeout(()=>a.classList.add("in"), 420+i*70); });
 
   const wk = WEEK.reduce((a,b)=>a+b,0);
-  document.getElementById("kpis").innerHTML = [
+  const trend = (a,b,lbl) => b ? {tr:(a>=b?"↑ ":"↓ ")+Math.abs(Math.round((a-b)/b*100))+"% "+lbl, up:a>=b} : {tr:"taqqoslash uchun hali ma'lumot yo'q", up:true};
+  let KP;
+  if (BE){
+    const S = BE.sales;
+    KP = [{l:"Bugun", d:fmtD(TODAY), v:S.today, ...trend(S.today,S.yesterday,"kechagidan")},
+          {l:"Shu hafta", d:fmtD(dayAdd(-6))+" — "+fmtD(TODAY), v:S.week_sum, ...trend(S.week_sum,S.prev_week,"o'tgan haftadan")},
+          {l:"Shu oy", d:"1 — "+fmtD(TODAY), v:S.month, ...trend(S.month,S.prev_month,"o'tgan oy shu kunlarga")}];
+    const t0 = trend(S.today,S.yesterday,"");
+    document.getElementById("heroMeta").innerHTML = (S.yesterday ? `<b>${t0.tr.split(" ").slice(0,2).join(" ")}</b> kechagidan · ` : "") + `<b>${S.checks}</b> ta chek`;
+    const L = BE.last;
+    document.getElementById("lastTx").innerHTML = L
+      ? `<div class="pillic" aria-hidden="true">${svg("pill")}</div><div><div class="txn">${L.n} × ${L.q}</div><div class="txs">${L.who} · ${L.d===BE.today?"":L.d.slice(8,10)+"."+L.d.slice(5,7)+" "}${L.t}</div></div><div class="txa money">${money(L.sum)}</div>`
+      : `<div class="txs">Hali sotuv yozilmagan</div>`;
+  } else KP = [
     {l:"Bugun", d:fmtD(TODAY), v:SALES, tr:"↑ 18% kechagidan", up:true},
     {l:"Shu hafta", d:fmtD(dayAdd(-6))+" — "+fmtD(TODAY), v:wk*1e6, tr:"↑ 9% o'tgan haftadan", up:true},
     {l:"Shu oy", d:"1 — "+fmtD(TODAY), v:4.21e6, tr:"↓ 4% o'tgan oy shu kunlarga", up:false}
-  ].map(k=>`<div class="kpi"><div><div class="l">${k.l}</div><div class="d">${k.d}</div></div>
+  ];
+  if (LV) document.getElementById("note").style.display = "none";
+  document.getElementById("kpis").innerHTML = KP.map(k=>`<div class="kpi"><div><div class="l">${k.l}</div><div class="d">${k.d}</div></div>
      <div><div class="v money">${k.v>=1e7?mln(k.v)+"<small>mln</small>":money(k.v)+"<small>so'm</small>"}</div><div class="tr ${k.up?"up":"down"}">${k.tr}</div></div></div>`).join("");
 
   const items = [
-    ...low.map(x=>({n:`${x.n} ${x.d}`, s:`${x.q} dona qoldi`, k:"r", l:"Buyurtma", i:"warn"})),
-    ...soon.map(x=>({n:`${x.n} ${x.d}`, s:`${x.exp} kundan keyin muddati tugaydi`, k:"y", l:"Muddat", i:"clock"}))
+    ...low.map(x=>({n:esc(`${x.n} ${x.d}`), s:`${x.q} dona qoldi`, k:"r", l:"Buyurtma", i:"warn"})),
+    ...soon.map(x=>({n:esc(`${x.n} ${x.d}`), s:x.exp<0?"muddati o'tgan!":`${x.exp} kundan keyin muddati tugaydi`, k:"y", l:"Muddat", i:"clock"}))
   ];
   document.getElementById("attnSub").textContent = items.length ? `${items.length} ta holat` : "Hozircha hammasi joyida";
   document.getElementById("attn").innerHTML = items.map(a=>
     `<div class="row"><div class="ico ${a.k}">${svg(a.i)}</div><div class="gr"><div class="n">${a.n}</div><div class="s">${a.s}</div></div><span class="tag ${a.k}">${a.l}</span></div>`).join("");
 
-  const mx = Math.max(...WEEK);
+  const mx = Math.max(...WEEK, 0.01);
   document.getElementById("wkSum").textContent = dec(wk,2) + " mln";
   document.getElementById("wk").innerHTML = WEEK.map((v,i)=>{
     const d = dayAdd(i-6), now = i===6;
@@ -925,7 +992,8 @@ countUp(document.getElementById("heroNum"), SALES, 1300, money);
 
 /* gauge */
 const G = {cx:150, cy:150, rArc:100, r1:114, n:41};
-let target = 1.5, shown = 0;
+let target = BE ? Math.max(0.5, Math.round(BE.target/1e5)/10) : 1.5, shown = 0;
+let tgtT; function saveTarget(){ if (!BE) return; clearTimeout(tgtT); tgtT = setTimeout(()=>api("target",{sum:Math.round(target*1e6)}).catch(e=>toast(e.message)), 700); }
 const pt = (r,th) => [G.cx + r*Math.cos(th), G.cy - r*Math.sin(th)];
 function drawGauge(p){
   p = Math.max(0, Math.min(1, p)); let html = "";
@@ -951,8 +1019,8 @@ function updateGauge(anim){
   (function f(t){ const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,4); shown = from+(to-from)*e; drawGauge(shown);
     pctEl.textContent = Math.round(pFrom+(pTo-pFrom)*e)+"%"; if(k<1) requestAnimationFrame(f); })(t0);
 }
-document.getElementById("tMinus").onclick = ()=>{ if (target>0.5){ target=Math.round((target-0.1)*10)/10; hap(); updateGauge(true);} };
-document.getElementById("tPlus").onclick  = ()=>{ if (target<3){   target=Math.round((target+0.1)*10)/10; hap(); updateGauge(true);} };
+document.getElementById("tMinus").onclick = ()=>{ if (target>0.5){ target=Math.round((target-0.1)*10)/10; hap(); updateGauge(true); saveTarget();} };
+document.getElementById("tPlus").onclick  = ()=>{ if (target<20){   target=Math.round((target+0.1)*10)/10; hap(); updateGauge(true); saveTarget();} };
 drawGauge(0); setTimeout(()=>updateGauge("long"), 250);
 RENDER.umumiy = ()=>grow("#wk .b","height");
 
@@ -970,6 +1038,14 @@ function hexPath(cx,cy,r,rad){
   }
   return d+"Z";
 }
+function stockEmpty(){
+  const msg = LV && BE ? "Zaxira hali bo'sh. Botga Excel fayl yoki nakladnoy rasmini yuboring — dorilar shu yerda paydo bo'ladi." : "Zaxira hali kiritilmagan.";
+  document.getElementById("comb").innerHTML = "";
+  document.getElementById("det").innerHTML = `<div class="empty" style="padding:28px 8px">${msg}</div>`;
+  document.getElementById("slist").innerHTML = "";
+  document.getElementById("stockSub").textContent = "0 ta dori";
+}
+const cut = (t,n) => t.length > n ? t.slice(0,n-1)+"…" : t;
 function buildComb(){
   const s=55, f=1.07, slots=[[0,0],[-1,0],[1,0],[0,-1],[1,-1],[-1,1]];
   const pos = slots.map(([q,r])=>[s*Math.sqrt(3)*(q+r/2)*f, s*1.5*r*f]);
@@ -987,29 +1063,30 @@ function buildComb(){
       <path class="edge" d="${hexPath(cx,cy,r,13)}" fill="${sel?"url(#hSel)":"url(#hDark)"}" stroke="${sel?"rgba(255,255,255,.35)":"rgba(255,255,255,.1)"}"/>
       <path d="${hexPath(cx,cy,r-2,12)}" fill="url(#hSheen)"/>
       <circle cx="${cx}" cy="${cy-26}" r="4" fill="${sel?"#fff":STC[st]}"${sel?"":` style="filter:drop-shadow(0 0 5px ${STC[st]})"`}/>
-      <text x="${cx}" y="${cy+1}" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">${x.n}</text>
-      <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="11" fill="${sel?"rgba(255,255,255,.85)":"rgba(255,255,255,.5)"}">${x.d}</text></g>`;
+      <text x="${cx}" y="${cy+1}" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">${esc(cut(x.n,11))}</text>
+      <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="11" fill="${sel?"rgba(255,255,255,.85)":"rgba(255,255,255,.5)"}">${esc(cut(x.d,12))}</text></g>`;
   });
   const [ax,ay] = pos[5];
-  html += `<g opacity=".55" style="cursor:pointer" id="combMore"><path d="${hexPath(ax,ay,r,13)}" fill="none" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 5"/>
+  if (stock.length > COMB_N) html += `<g opacity=".55" style="cursor:pointer" id="combMore"><path d="${hexPath(ax,ay,r,13)}" fill="none" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 5"/>
     <text x="${ax}" y="${ay-2}" text-anchor="middle" font-size="22" fill="rgba(255,255,255,.6)" font-family="Geist,Arial">+${stock.length-COMB_N}</text>
     <text x="${ax}" y="${ay+17}" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.5)" font-family="Geist,Arial">yana dori</text></g>`;
   svgEl.innerHTML = html;
+  const cm = document.getElementById("combMore");
+  if (cm) cm.onclick = ()=>{ hap(); document.getElementById("q").focus(); document.getElementById("slist").scrollIntoView({behavior:RM?"auto":"smooth", block:"center"}); };
   svgEl.querySelectorAll(".hx").forEach(g=>{
     const pick = ()=>{ selStock=+g.dataset.i; hap(); buildComb(); renderDetail(); renderList(); };
     g.addEventListener("click", pick);
     g.addEventListener("keydown", e=>{ if (e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
   });
-  document.getElementById("combMore").onclick = ()=>{ hap(); document.getElementById("q").focus(); document.getElementById("slist").scrollIntoView({behavior:RM?"auto":"smooth", block:"center"}); };
 }
 function renderDetail(){
   const x = stock[selStock], st = status(x), pct = Math.min(100, Math.round(x.q/x.max*100)), need = Math.max(0, x.max-x.q), on = ordered.has(selStock);
   document.getElementById("det").innerHTML = `
-    <div class="chead"><div><h2>${x.n} ${x.d}</h2><div class="sub">Omborda va javonda jami</div></div><span class="tag ${STT[st]}">${STL[st]}</span></div>
+    <div class="chead"><div><h2>${esc(x.n+" "+x.d)}</h2><div class="sub">Omborda va javonda jami</div></div><span class="tag ${STT[st]}">${STL[st]}</span></div>
     <div class="qty"><b>${x.q}</b><span>/ ${x.max} dona</span></div>
     <div class="bar"><b data-w="${pct}" id="dbar" style="background:linear-gradient(90deg,${STC[st]}cc,${STC[st]})"></b></div>
     <div class="facts">
-      <div class="fact"><div class="l">Muddati</div><div class="v">${x.exp} kun</div></div>
+      <div class="fact"><div class="l">Muddati</div><div class="v">${expTxt(x)}</div></div>
       ${ROLE==="egasi" ? `<div class="fact"><div class="l">Tavsiya buyurtma</div><div class="v">${need} dona</div></div>`
         : `<div class="fact"><div class="l">Narxi</div><div class="v">${money(x.p)} so'm</div></div>`}
     </div>
@@ -1020,16 +1097,16 @@ function renderDetail(){
   else document.getElementById("sellBtn").onclick = ()=>{ if (stock[selStock].q<1) return; hap("light"); pickProduct(selStock); go("sotuv"); };
 }
 function renderList(){
-  const q = document.getElementById("q").value.trim().toLowerCase();
-  const rows = stock.map((x,i)=>({x,i})).filter(({x})=>(x.n+" "+x.d).toLowerCase().includes(q)).sort((a,b)=>a.x.q/a.x.max - b.x.q/b.x.max);
+  const q = kal(document.getElementById("q").value);
+  const rows = stock.map((x,i)=>({x,i})).filter(({x})=>kal(x.n+" "+x.d).includes(q)).sort((a,b)=>a.x.q/a.x.max - b.x.q/b.x.max);
   document.getElementById("stockSub").textContent = ROLE==="egasi" ? `${stock.length} ta dori · ${ordered.size} tasi buyurtma ro'yxatida` : `${stock.length} ta dori · narxi va qoldig'i`;
   document.getElementById("slist").innerHTML = rows.length ? rows.map(({x,i})=>{
     const st = status(x), pct = Math.min(100, Math.round(x.q/x.max*100));
     return `<div class="row srow${i===selStock?" sel":""}" data-i="${i}">
-      <div class="gr"><div class="n">${x.n} ${x.d}${ordered.has(i)?' <span class="tag g" style="margin-left:6px;padding:3px 8px">ro\'yxatda</span>':""}</div>
+      <div class="gr"><div class="n">${esc(x.n+" "+x.d)}${ordered.has(i)?' <span class="tag g" style="margin-left:6px;padding:3px 8px">ro\'yxatda</span>':""}</div>
       <div class="sbar"><b style="width:${pct}%;background:${STC[st]}"></b></div></div>
-      <div class="rv"><div class="a">${x.q} / ${x.max}</div><div class="t">${x.exp} kun</div></div></div>`;
-  }).join("") : `<div class="empty">"${q}" bo'yicha dori topilmadi</div>`;
+      <div class="rv"><div class="a">${x.q} / ${x.max}</div><div class="t">${expTxt(x)}</div></div></div>`;
+  }).join("") : `<div class="empty">"${esc(document.getElementById("q").value)}" bo'yicha dori topilmadi</div>`;
   document.querySelectorAll("#slist .srow").forEach(r=>r.onclick=()=>{
     selStock = +r.dataset.i; hap();
     if (!combIdx.includes(selStock)){ combIdx[combIdx.length-1] = selStock; }
@@ -1038,7 +1115,7 @@ function renderList(){
   });
 }
 document.getElementById("q").addEventListener("input", renderList);
-RENDER.zaxira = ()=>{ buildComb(); renderDetail(); renderList(); };
+RENDER.zaxira = ()=>{ if (!stock.length) return stockEmpty(); buildComb(); renderDetail(); renderList(); };
 
 /* ================= XODIMLAR ================= */
 let selStaff = 0;
@@ -1055,17 +1132,23 @@ function buildOrbit(){
   });
 }
 function renderStaff(){
+  if (!staff.length){
+    document.getElementById("on").textContent = "Xodim yo'q"; document.getElementById("ov").textContent = "0";
+    document.getElementById("ou").textContent = "botda /taklif bilan qo'shing";
+    document.getElementById("rank").innerHTML = `<div class="empty">Xodimlar qo'shilganda shu yerda reyting ko'rinadi</div>`; return;
+  }
   const p = staff[selStaff];
   document.getElementById("on").textContent = p.n;
-  countUp(document.getElementById("ov"), p.s, 600, v=>dec(v,1));
-  document.getElementById("ou").textContent = `mln so'm · ${p.c} sotuv`;
-  const top = ranked[0].s;
+  const big = p.s >= 0.1;
+  countUp(document.getElementById("ov"), big ? p.s : p.s*1e6, 600, v=>big ? dec(v,1) : money(v));
+  document.getElementById("ou").textContent = `${big?"mln so'm":"so'm"} · ${p.c} sotuv`;
+  const top = Math.max(ranked[0].s, 0.01);
   document.getElementById("rank").innerHTML = ranked.map((r,k)=>{
     const late = r.t && r.t>"09:00", tt = r.t ? (late?`${r.t} · kechikdi`:`${r.t} da keldi`) : "bugun kelmadi";
     return `<div class="row${r===p?" sel":""}" data-n="${r.n}"><div class="rk">${String(k+1).padStart(2,"0")}</div>
       <div class="ravatar" style="background:radial-gradient(circle at 35% 25%,#fff,${r.col} 55%)">${r.n.slice(0,2)}</div>
       <div class="gr"><div class="n">${r.n}</div><div class="rbar"><b data-w="${Math.round(r.s/top*100)}"></b></div></div>
-      <div class="rv"><div class="a money">${dec(r.s,1)} mln</div><div class="t${late||!r.t?" late":""}">${tt}</div></div></div>`;
+      <div class="rv"><div class="a money">${r.s>=0.1 ? dec(r.s,1)+" mln" : money(r.s*1e6)}</div><div class="t${late||!r.t?" late":""}">${tt}</div></div></div>`;
   }).join("");
   document.querySelectorAll("#rank .row").forEach(r=>r.onclick=()=>{ selStaff = staff.findIndex(s=>s.n===r.dataset.n); hap(); buildOrbit(); renderStaff(); });
   grow("#rank .rbar b","width");
@@ -1073,25 +1156,29 @@ function renderStaff(){
 RENDER.xodim = ()=>{ buildOrbit(); renderStaff(); };
 
 /* ================= KASSA ================= */
-function approvedCancel(){ return requests.filter(r=>r.st==="ok").reduce((a,r)=>a+r.sum,0); }
+function approvedCancel(){ return LV ? 0 : requests.filter(r=>r.st==="ok").reduce((a,r)=>a+r.sum,0); }
 function expectedCash(){ return KASSA.cash - approvedCancel(); }
 function renderKassa(){
-  const canc = approvedCancel();
+  const canc = LV ? (KASSA.cancelled||0) : approvedCancel();
   document.getElementById("kbreak").innerHTML = `
     <div class="krow"><span>Naqd sotuv</span><b class="money">${money(KASSA.cash)} so'm</b></div>
     <div class="krow"><span>Karta (Click, Payme, Uzcard)</span><b class="money">${money(KASSA.card)} so'm</b></div>
-    <div class="krow"><span>Tasdiqlangan qaytarishlar</span><b class="money" style="color:${canc?"#ff8f84":"inherit"}">${canc?money(-canc):"0"} so'm</b></div>
+    <div class="krow"><span>${LV?"Bekor qilingan (hisobga olinmaydi)":"Tasdiqlangan qaytarishlar"}</span><b class="money" style="color:${canc?"#ff8f84":"inherit"}">${canc?money(-canc):"0"} so'm</b></div>
     <div class="krow tot"><span>Kassada bo'lishi kerak (naqd)</span><b class="money">${money(expectedCash())} so'm</b></div>`;
   checkCash();
   const w = requests.filter(r=>r.st==="wait");
   document.getElementById("reqs").innerHTML = requests.map(r=>`
     <div class="row"><div class="ico ${r.st==="wait"?"y":r.st==="ok"?"g":"n"}">${svg("undo")}</div>
-      <div class="gr"><div class="n">${r.who} · <span class="money">${money(r.sum)}</span></div><div class="s">${r.item} · ${r.why} · ${r.time}</div></div>
+      <div class="gr"><div class="n">${esc(r.who)} · <span class="money">${money(r.sum)}</span></div><div class="s">${esc(r.item)} · ${esc(r.why)} · ${r.time}</div></div>
       ${r.st==="wait" ? `<div class="rqbtns"><button class="sq ok" data-a="ok" data-id="${r.id}" aria-label="Tasdiqlash">${svg("check",17)}</button><button class="sq no" data-a="no" data-id="${r.id}" aria-label="Rad etish">${svg("x",17)}</button></div>`
         : `<span class="tag ${r.st==="ok"?"g":"r"}">${r.st==="ok"?"Tasdiqlandi":"Rad etildi"}</span>`}
     </div>`).join("") || `<div class="empty">So'rovlar yo'q</div>`;
   document.querySelectorAll("#reqs .sq").forEach(b=>b.onclick=()=>{
-    const r = requests.find(x=>x.id===+b.dataset.id); r.st = b.dataset.a; hap(r.st==="ok"?"medium":"heavy"); renderKassa(); buildNav();
+    const r = requests.find(x=>x.id===+b.dataset.id), a = b.dataset.a;
+    if (!LV){ r.st = a; hap(a==="ok"?"medium":"heavy"); renderKassa(); buildNav(); return; }
+    b.disabled = true;
+    api("request", {id:r.id, ok:a==="ok"}).then(j=>{ r.st = a; Object.assign(KASSA, j.kassa||{}); hap(a==="ok"?"medium":"heavy"); toast(a==="ok"?"Tasdiqlandi, dori zaxiraga qaytdi":"Rad etildi"); renderKassa(); buildNav(); })
+      .catch(e=>{ b.disabled = false; toast(e.message); });
   });
   document.getElementById("khist").innerHTML = KHIST.map(h=>{
     const d = dayAdd(-h.d), bad = h.diff<0;
@@ -1114,14 +1201,18 @@ document.getElementById("cash").addEventListener("input", e=>{
   const d = e.target.value.replace(/\D/g,"").slice(0,10);
   e.target.value = d ? money(+d) : ""; checkCash();
 });
+document.getElementById("cash").addEventListener("change", e=>{
+  const v = +e.target.value.replace(/\D/g,""); if (!LV || !BE || !v) return;
+  api("kassa", {sum:v}).then(j=>{ Object.assign(KASSA, j.kassa||{}); toast("Kassa tekshiruvi saqlandi"); }).catch(er=>toast(er.message));
+});
 RENDER.kassa = renderKassa;
 
 /* ================= QARZLAR ================= */
 let openSup = -1;
 function renderQarz(){
   const rest = sups.reduce((a,s)=>a+(s.total-s.paid),0);
-  const late = sups.filter(s=>s.due<0 && s.paid<s.total).length;
-  const next = sups.filter(s=>s.due>=0 && s.paid<s.total).sort((a,b)=>a.due-b.due)[0];
+  const late = sups.filter(s=>s.due!=null && s.due<0 && s.paid<s.total).length;
+  const next = sups.filter(s=>s.due!=null && s.due>=0 && s.paid<s.total).sort((a,b)=>a.due-b.due)[0];
   countUp(document.getElementById("debtNum"), rest, 900, money);
   document.getElementById("dstats").innerHTML =
     `<span class="chip"><b>${sups.filter(s=>s.paid<s.total).length}</b> ta firma</span>`
@@ -1129,9 +1220,9 @@ function renderQarz(){
     + (next?`<span class="chip">Navbatdagi: <b>${next.n}</b>, ${next.due?next.due+" kunda":"bugun"}</span>`:"");
   document.getElementById("sups").innerHTML = sups.map((s,i)=>{
     const r = s.total-s.paid, pct = Math.round(s.paid/s.total*100), done = r<=0;
-    const tag = done ? `<span class="tag g">To'langan</span>` : s.due<0 ? `<span class="tag r">${-s.due} kun kechikdi</span>` : `<span class="tag v">${s.due?fmtD(dayAdd(s.due)):"Bugun"}</span>`;
+    const tag = done ? `<span class="tag g">To'langan</span>` : s.due==null ? `<span class="tag v">Muddatsiz</span>` : s.due<0 ? `<span class="tag r">${-s.due} kun kechikdi</span>` : `<span class="tag v">${s.due?fmtD(dayAdd(s.due)):"Bugun"}</span>`;
     return `<div class="card sup${openSup===i?" open":""}" data-i="${i}">
-      <div class="top"><div><h2 style="font-size:22px">${s.n}</h2></div>${tag}</div>
+      <div class="top"><div><h2 style="font-size:22px">${esc(s.n)}</h2></div>${tag}</div>
       <div class="rest money">${money(Math.max(0,r))}<small>so'm qoldi</small></div>
       <div class="of"><span class="money">${money(s.paid)}</span> / <span class="money">${money(s.total)}</span> to'langan</div>
       <div class="bar"><b data-w="${pct}" style="background:linear-gradient(90deg,#8d68ff,#c3b0ff)"></b></div>
@@ -1145,8 +1236,10 @@ function renderQarz(){
     const inp = c.querySelector("input");
     gb.onclick = ()=>{ openSup = i; hap(); renderQarz(); setTimeout(()=>{ const x=document.querySelector(`#sups .sup[data-i="${i}"] input`); if(x) x.focus(); },50); };
     inp.addEventListener("input", ()=>{ const d = inp.value.replace(/\D/g,"").slice(0,10); inp.value = d?money(+d):""; });
-    const save = ()=>{ const v = +inp.value.replace(/\D/g,""); if (!v) return;
-      const s = sups[i]; s.paid = Math.min(s.total, s.paid+v); openSup = -1; hap("medium");
+    const save = async ()=>{ const v = +inp.value.replace(/\D/g,""); if (!v) return;
+      const s = sups[i];
+      if (LV){ try { await api("qarz/pay", {firma:s.n, sum:v}); toast("To'lov saqlandi"); } catch(e){ toast(e.message); return; } }
+      s.paid = Math.min(s.total, s.paid+v); openSup = -1; hap("medium");
       EVENTS.unshift({t:new Date().toTimeString().slice(0,5), k:"qarz", txt:`${s.n}'ga to'lov`, sub:"Mini ilovadan kiritildi", amt:-v});
       renderQarz(); buildNav(); };
     c.querySelector(".vbtn").onclick = save;
@@ -1156,9 +1249,9 @@ function renderQarz(){
 RENDER.qarz = renderQarz;
 
 /* ================= TARIX ================= */
-const FILTERS = [["all","Hammasi"],["sotuv","Sotuvlar"],["bekor","Bekor qilish"],["davomat","Davomat"],["qarz","Qarzlar"]];
+const FILTERS = [["all","Hammasi"],["sotuv","Sotuvlar"],["bekor","Bekor qilish"],["davomat","Davomat"],["qarz","Qarzlar"],["kirim","Kirim"]];
 let flt = "all";
-const EVIC = {sotuv:["cart","g"], bekor:["undo","r"], davomat:["login","b"], qarz:["qarz","v"]};
+const EVIC = {sotuv:["cart","g"], bekor:["undo","r"], davomat:["login","b"], qarz:["qarz","v"], kirim:["hex","b"]};
 function renderTarix(){
   document.getElementById("fchips").innerHTML = FILTERS.map(([k,l])=>{
     const n = k==="all" ? EVENTS.length : EVENTS.filter(e=>e.k===k).length;
@@ -1166,25 +1259,25 @@ function renderTarix(){
   }).join("");
   document.querySelectorAll("#fchips .fchip").forEach(b=>b.onclick=()=>{ flt=b.dataset.k; hap(); renderTarix(); });
   const list = EVENTS.filter(e=>flt==="all"||e.k===flt);
-  document.getElementById("tl").innerHTML = list.map((e,i)=>{
-    const [ic,c] = EVIC[e.k];
+  document.getElementById("tl").innerHTML = list.length ? list.map((e,i)=>{
+    const [ic,c] = EVIC[e.k] || ["tarix","n"];
     return `<div class="ev${e.flag?" flag":""}"${i===0?' style="border-top:0"':""}><div class="tm">${e.t}</div><div class="ico ${c}">${svg(ic)}</div>
-      <div class="gr"><div class="n">${e.txt}</div><div class="s">${e.sub}</div></div>
+      <div class="gr"><div class="n">${esc(e.txt)}</div><div class="s">${esc(e.sub||"")}</div></div>
       ${e.amt!=null?`<div class="amt money" style="color:${e.amt<0?"#ff8f84":"#5ff0b2"}">${e.amt>0?"+":""}${money(e.amt)}</div>`:""}</div>`;
-  }).join("");
+  }).join("") : `<div class="empty">Bugun hali voqea yo'q</div>`;
 }
 RENDER.tarix = renderTarix;
 
 /* ================= XODIM: mening kunim ================= */
 let lastId = 31;
-let mySales = [
+let mySales = LV ? (BX ? BX.my.sales : []) : [
   {id:31, t:"10:42", n:"Parasetamol 500 mg", q:5, sum:25000, pay:"naqd",  st:null},
   {id:27, t:"10:05", n:"Vitamin C 500 mg",   q:1, sum:30000, pay:"karta", st:null},
   {id:22, t:"09:31", n:"Sitramon P",         q:2, sum:8000,  pay:"naqd",  st:"wait", why:"Mijoz qaytardi"},
   {id:18, t:"09:02", n:"Ibuprofen 400 mg",   q:1, sum:18000, pay:"karta", st:null}
 ];
-const MYWEEK = [0.31,0.42,0.38,0.52,0.47,0.55];
-const shift = {on:true, start:"08:54", end:null};
+const MYWEEK = LV ? (BX ? BX.my.week : [0,0,0,0,0,0]) : [0.31,0.42,0.38,0.52,0.47,0.55];
+const shift = LV ? (BX ? BX.my.shift : {on:false, start:null, end:null}) : {on:true, start:"08:54", end:null};
 const nowHM = () => { const d = new Date(); return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); };
 const hm2min = s => +s.slice(0,2)*60 + +s.slice(3,5);
 const dur = m => Math.floor(m/60)+":"+String(m%60).padStart(2,"0");
@@ -1195,6 +1288,12 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add("on"); cle
 
 function renderShift(){
   const face = document.getElementById("shFace");
+  if (!shift.start){
+    face.classList.add("off"); document.getElementById("shLbl").textContent = "Ish boshlanmagan";
+    document.getElementById("shTimer").textContent = "0:00";
+    document.getElementById("shMeta").innerHTML = "Ishga kelganingizda pastdagi tugmani bosing";
+    document.getElementById("shBtn").textContent = "Ishni boshlash"; return;
+  }
   const nowM = hm2min(nowHM()), sM = hm2min(shift.start);
   const late = sM > 9*60 ? sM - 9*60 : 0;
   face.classList.toggle("off", !shift.on);
@@ -1207,7 +1306,12 @@ function renderShift(){
   const b = document.getElementById("shBtn");
   b.textContent = shift.on ? "Ishni tugatish" : "Ishni boshlash";
 }
-function toggleShift(){
+async function toggleShift(){
+  if (LV){
+    try { const j = await api("shift", {turi: shift.on ? "ketdi" : "keldi"}); Object.assign(shift, j.shift); hap("medium"); toast(j.msg); }
+    catch(e){ toast(e.message); }
+    renderShift(); buildNav(); return;
+  }
   if (shift.on){ shift.on = false; shift.end = nowHM(); hap("medium"); toast("Ish tugadi: " + shift.end); }
   else { shift.on = true; shift.start = nowHM(); shift.end = null; hap("medium"); toast("Ish boshlandi: " + shift.start); }
   renderShift(); buildNav();
@@ -1221,7 +1325,7 @@ function saleRow(s){
     : s.st==="no" ? `<span class="tag g">Rad etildi</span>`
     : `<button class="sbtn" data-cancel="${s.id}">Bekor so'rash</button>`;
   return `<div class="row"><div class="ico ${s.pay==="karta"?"b":"g"}">${svg(s.pay==="karta"?"kassa":"cart")}</div>
-    <div class="gr"><div class="n">${s.n} × ${s.q}</div><div class="s">#${s.id} · ${s.t} · ${s.pay==="karta"?"karta":"naqd"} · <span class="money">${money(s.sum)} so'm</span></div></div>${tag}</div>`;
+    <div class="gr"><div class="n">${esc(s.n)} × ${s.q}</div><div class="s">#${s.id} · ${s.t} · ${s.pay==="karta"?"karta":"naqd"} · <span class="money">${money(s.sum)} so'm</span></div></div>${tag}</div>`;
 }
 function renderMyLists(){
   const c = counted(), sum = c.reduce((a,s)=>a+s.sum,0);
@@ -1234,12 +1338,13 @@ function renderMyLists(){
   document.querySelectorAll("[data-cancel]").forEach(b=>b.onclick=()=>{
     const s = mySales.find(x=>x.id===+b.dataset.cancel); hap();
     openSheet(`#${s.id} ni bekor qilish`, ["Xato yozildi","Mijoz qaytardi","Miqdor noto'g'ri"].map(w=>({ic:"undo", cls:"y", t:w, s:"So'rov egasiga yuboriladi", fn:()=>{
+      if (LV){ api("cancel", {sale_id:s.id, why:w}).then(j=>{ s.st = "wait"; s.why = w; renderMyLists(); toast(j.msg || "So'rov egasiga yuborildi"); }).catch(e=>toast(e.message)); return; }
       s.st = "wait"; s.why = w; renderMyLists(); toast("So'rov egasiga yuborildi");
     }})));
   });
   const last = mySales.find(s=>s.st!=="ok");
   document.getElementById("myLast").innerHTML = last
-    ? `<div class="pillic" aria-hidden="true">${svg("pill")}</div><div><div class="txn">${last.n}</div><div class="txs">${last.q} dona · ${last.t}</div></div><div class="txa money">${money(last.sum)}</div>`
+    ? `<div class="pillic" aria-hidden="true">${svg("pill")}</div><div><div class="txn">${esc(last.n)}</div><div class="txs">${last.q} dona · ${last.t}</div></div><div class="txa money">${money(last.sum)}</div>`
     : `<div class="txs">Hali sotuv yo'q</div>`;
 }
 function renderMening(){
@@ -1248,7 +1353,7 @@ function renderMening(){
   document.getElementById("myStats").innerHTML = [
     ["Sotuv", money(sum)], ["Cheklar", c.length], ["O'rtacha chek", money(avg)]
   ].map(([l,v])=>`<div class="ms"><div class="l">${l}</div><div class="v money">${v}</div></div>`).join("");
-  const wk = [...MYWEEK, sum/1e6], mx = Math.max(...wk);
+  const wk = [...MYWEEK, sum/1e6], mx = Math.max(...wk, 0.01);
   document.getElementById("myWk").innerHTML = wk.map((v,i)=>{
     const d = dayAdd(i-6), now = i===6;
     return `<div class="c${now?" now":""}"><div class="v money">${dec(v,2)}</div><div class="b" data-w="${Math.max(4,Math.round(v/mx*100))}"></div><div class="dl">${now?"Bugun":KQ[d.getDay()]}</div></div>`;
@@ -1270,18 +1375,18 @@ function renderSaleForm(){
   if (pickIdx >= 0){
     const x = stock[pickIdx];
     pick.classList.add("on");
-    pick.innerHTML = `<div class="ico b">${svg("pill")}</div><div class="gr"><div class="n">${x.n} ${x.d}</div>
-      <div class="s">Zaxirada ${x.q} dona · narxi ${money(x.p)} so'm</div></div><button class="x" id="unpick" aria-label="Boshqa dori tanlash">${svg("x",16)}</button>`;
+    pick.innerHTML = `<div class="ico b">${svg("pill")}</div><div class="gr"><div class="n">${esc(x.n+" "+x.d)}</div>
+      <div class="s">Zaxirada ${x.q} dona · ${x.p?"narxi "+money(x.p)+" so'm":"narxi kiritilmagan"}</div></div><button class="x" id="unpick" aria-label="Boshqa dori tanlash">${svg("x",16)}</button>`;
     document.getElementById("unpick").onclick = ()=>{ pickIdx = -1; renderSaleForm(); sq.focus(); };
   } else pick.classList.remove("on");
 
-  const q = sq.value.trim().toLowerCase();
+  const q = kal(sq.value);
   let list, lbl;
-  if (q){ list = stock.map((x,i)=>({x,i})).filter(({x})=>(x.n+" "+x.d).toLowerCase().includes(q)).slice(0,6); lbl = list.length ? "" : `"${sq.value}" topilmadi`; }
-  else if (pickIdx < 0){ list = [1,8,4,5,3].map(i=>({x:stock[i],i})); lbl = "Ko'p sotiladiganlar"; }
+  if (q){ list = stock.map((x,i)=>({x,i})).filter(({x})=>kal(x.n+" "+x.d).includes(q)).slice(0,6); lbl = list.length ? "" : `"${esc(sq.value)}" topilmadi`; }
+  else if (pickIdx < 0){ list = LV ? stock.map((x,i)=>({x,i})).filter(o=>o.x.q>0).slice(0,5) : [1,8,4,5,3].filter(i=>stock[i]).map(i=>({x:stock[i],i})); lbl = list.length ? (LV ? "Zaxiradagi dorilar" : "Ko'p sotiladiganlar") : "Zaxira hali kiritilmagan"; }
   else { list = []; lbl = ""; }
   sugg.innerHTML = (lbl?`<div class="lbl">${lbl}</div>`:"") + list.map(({x,i})=>
-    `<button class="sg" data-i="${i}"><div class="gr"><div class="n">${x.n} ${x.d}</div><div class="s">${x.q} dona qoldi</div></div><div class="pr">${money(x.p)}</div></button>`).join("");
+    `<button class="sg" data-i="${i}"><div class="gr"><div class="n">${esc(x.n+" "+x.d)}</div><div class="s">${x.q} dona qoldi</div></div><div class="pr">${money(x.p)}</div></button>`).join("");
   sugg.querySelectorAll(".sg").forEach(b=>b.onclick=()=>{ hap(); pickProduct(+b.dataset.i); });
 
   document.getElementById("qv").textContent = qty;
@@ -1292,12 +1397,22 @@ sq.addEventListener("input", ()=>{ document.getElementById("serr").textContent="
 document.getElementById("qm").onclick = ()=>{ if (qty>1){ qty--; hap(); renderSaleForm(); } };
 document.getElementById("qp").onclick = ()=>{ if (qty<99){ qty++; hap(); renderSaleForm(); } };
 document.querySelectorAll("#pay button").forEach(b=>b.onclick=()=>{ pay = b.dataset.p; hap(); renderSaleForm(); });
-document.getElementById("saveSale").onclick = ()=>{
+document.getElementById("saveSale").onclick = async ()=>{
   const err = document.getElementById("serr");
   if (pickIdx < 0){ err.textContent = "Avval dorini tanlang"; sq.focus(); return; }
   const x = stock[pickIdx];
   if (qty > x.q){ err.textContent = `Zaxirada faqat ${x.q} dona bor`; return; }
   err.textContent = "";
+  if (LV){
+    const btn = document.getElementById("saveSale"); if (btn.disabled) return; btn.disabled = true;
+    try {
+      const j = await api("sale", {stock_id:x.id, q:qty, pay});
+      x.q = j.q_left; mySales.unshift(j.sale);
+      hap("medium"); toast(j.msg);
+      pickIdx = -1; qty = 1; pay = "naqd"; renderSaleForm(); renderMyLists(); buildNav();
+    } catch(e){ err.textContent = e.message; }
+    btn.disabled = false; return;
+  }
   x.q -= qty;
   const s = {id:++lastId, t:nowHM(), n:`${x.n} ${x.d}`, q:qty, sum:x.p*qty, pay, st:null};
   mySales.unshift(s);
@@ -1312,7 +1427,7 @@ function applyRole(r){
   TABS = r==="egasi" ? TABS_E : TABS_X;
   MOBILE = r==="egasi" ? ["umumiy","zaxira","xodim","kassa"] : ["mening","sotuv","zaxira"];
   document.getElementById("uRole").textContent = r==="egasi" ? "Dorixona egasi" : "Xodim";
-  const nm = r==="egasi" ? ((TGU && TGU.first_name) || "Egasi") : ME.n;
+  const nm = BOOT ? ME.n : r==="egasi" ? ((TGU && TGU.first_name) || "Egasi") : ME.n;
   document.getElementById("uName").textContent = nm;
   document.getElementById("uIni").textContent = nm.slice(0,2);
   document.querySelectorAll("#roleSw button").forEach(b=>b.classList.toggle("on", b.dataset.r===r));
@@ -1326,6 +1441,10 @@ if (!IN_TG){
 /* ================= ishga tushirish ================= */
 paintIcons();
 applyRole(ROLE);
+} /* MAIN */
+
+if (LIVE) loadBoot().then(ok=>{ if (ok) MAIN(); });
+else MAIN();
 </script>
 </body>
 </html>
